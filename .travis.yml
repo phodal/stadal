@@ -1,0 +1,40 @@
+language: rust
+sudo: required
+
+rust:
+  - stable
+node_js:
+  - 12
+
+os:
+  - linux
+  - osx
+
+script:
+  - cargo build
+  - just tests-ci
+
+virtualenv:
+  system_site_packages: true
+
+addons:
+  apt:
+    packages:
+      - libcurl4-openssl-dev
+      - libelf-dev
+      - libdw-dev
+      - cmake
+      - gcc
+      - binutils-dev
+      - libiberty-dev
+
+before_install:
+  # adding $HOME/.sdkman to cache would create an empty directory, which interferes with the initial installation
+  - "[[ -d /home/travis/.sdkman/ ]] && [[ -d /home/travis/.sdkman/bin/ ]] || rm -rf /home/travis/.sdkman/"
+  - curl -sL https://get.sdkman.io | bash
+  - echo sdkman_auto_answer=true > $HOME/.sdkman/etc/config
+  - echo sdkman_auto_selfupdate=true >> $HOME/.sdkman/etc/config
+  - source "$HOME/.sdkman/bin/sdkman-init.sh"
+
+notifications:
+  email: false
