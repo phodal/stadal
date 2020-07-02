@@ -6,8 +6,14 @@ use heim::{memory, units::information, Result};
 
 #[tokio::main]
 async fn main() -> Result<()> {
-    let memory = memory::memory().await?;
-    let swap = memory::swap().await?;
+    print_memory().await;
+
+    Ok(())
+}
+
+async fn print_memory() {
+    let memory = memory::memory().await.unwrap();
+    let swap = memory::swap().await.unwrap();
 
     println!("              total        free   available");
     println!(
@@ -24,6 +30,4 @@ async fn main() -> Result<()> {
         swap.used().get::<information::megabyte>(),
         swap.free().get::<information::megabyte>(),
     );
-
-    Ok(())
 }
