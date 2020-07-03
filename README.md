@@ -1,6 +1,12 @@
 # Stadal
 
+> A RPC-based client-server system status tools, with Rust + Electron architecture.
+
 ## Architecture (design)
+
+ - RPC Server, (Using Rust) for read system status.
+ - RPC Client, (Using Rust to Node.js) for communication.
+ - UI Client, (Using Electron) for cross platform UI support.
 
 Node.js
 
