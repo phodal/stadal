@@ -80,10 +80,10 @@ impl Handler for Stadal {
     type Request = ();
 
     fn handle_notification(&mut self, ctx: &RpcCtx, rpc: Self::Notification) {
-        unimplemented!()
+        println!("handle_notification");
     }
 
     fn handle_request(&mut self, ctx: &RpcCtx, rpc: Self::Request) -> Result<Value, RemoteError> {
-        unimplemented!()
+        Ok(json!(1))
     }
 }
