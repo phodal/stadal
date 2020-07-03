@@ -9,4 +9,5 @@ edition = "2018"
 [dependencies]
 heim = "0.0.10"
 tokio = { version = "~0.2", features = ["full"] }
+log = "0.4.3"
 

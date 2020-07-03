@@ -723,6 +723,7 @@ name = "stadal"
 version = "0.1.0"
 dependencies = [
  "heim",
+ "log",
  "tokio",
 ]
 

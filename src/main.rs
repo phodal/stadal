@@ -1,11 +1,29 @@
+use std::{io, process};
+
+use heim::{memory, Result, units::information};
+use log::{error};
+
+use crate::application::application::Stadal;
+
 mod application;
 mod domain;
 mod infrastructure;
 
-use heim::{memory, units::information, Result};
-
 #[tokio::main]
 async fn main() -> Result<()> {
+    let mut state = Stadal::new();
+    let stdin = io::stdin();
+    let stdout = io::stdout();
+    let mut rpc_looper = RpcLoop::new(stdout);
+
+    // match rpc_looper.mainloop(|| stdin.lock(), &mut state) {
+    //     Ok(_) => (),
+    //     Err(err) => {
+    //         error!("exited with error:\n{:?}", err);
+    //         process::exit(1);
+    //     }
+    // }
+
     print_memory().await;
 
     Ok(())
