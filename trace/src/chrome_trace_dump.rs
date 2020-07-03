@@ -158,7 +158,10 @@ mod tests {
             assert_eq!(decoded_result[i]["ts"], samples[i].timestamp_us);
             let nth_sample = &samples[i];
             let nth_args = nth_sample.args.as_ref().unwrap();
-            assert_eq!(decoded_result[i]["args"]["xi_payload"], json!(nth_args.payload.as_ref()));
+            assert_eq!(
+                decoded_result[i]["args"]["xi_payload"],
+                json!(nth_args.payload.as_ref())
+            );
         }
         assert_eq!(decoded_result[5]["ph"], "B");
         assert_eq!(decoded_result[6]["ph"], "E");
@@ -174,7 +177,12 @@ mod tests {
         trace.instant("sample1", &["test", "chrome"]);
         trace.instant_payload("sample2", &["test", "chrome"], to_payload("payload 2"));
         trace.instant_payload("sample3", &["test", "chrome"], to_payload("payload 3"));
-        trace.closure_payload("sample4", &["test", "chrome"], || (), to_payload("payload 4"));
+        trace.closure_payload(
+            "sample4",
+            &["test", "chrome"],
+            || (),
+            to_payload("payload 4"),
+        );
 
         let samples = trace.samples_cloned_unsorted();
 
@@ -192,7 +200,11 @@ mod tests {
         use super::*;
 
         let mut serialized = Vec::<u8>::new();
-        let samples = vec![super::Sample::new_instant("trace1", &["benchmark", "test"], None)];
+        let samples = vec![super::Sample::new_instant(
+            "trace1",
+            &["benchmark", "test"],
+            None,
+        )];
         b.iter(|| {
             serialized.clear();
             serialize(&samples, &mut serialized).unwrap();
@@ -209,7 +221,13 @@ mod tests {
         let samples = vec![
             Sample::new_instant("trace1", &["benchmark", "test"], None),
             Sample::new_instant("trace2", &["benchmark"], None),
-            Sample::new_duration("trace3", &["benchmark"], Some(to_payload("some payload")), 0, 0),
+            Sample::new_duration(
+                "trace3",
+                &["benchmark"],
+                Some(to_payload("some payload")),
+                0,
+                0,
+            ),
             Sample::new_instant("trace4", &["benchmark"], None),
         ];
 

@@ -12,7 +12,11 @@
 // See the License for the specific language governing permissions and
 // limitations under the License.
 #![cfg_attr(feature = "benchmarks", feature(test))]
-#![allow(clippy::identity_op, clippy::new_without_default, clippy::trivially_copy_pass_by_ref)]
+#![allow(
+    clippy::identity_op,
+    clippy::new_without_default,
+    clippy::trivially_copy_pass_by_ref
+)]
 
 #[macro_use]
 extern crate lazy_static;
@@ -209,7 +213,9 @@ impl Config {
     /// The maximum number of entries the tracing data should allow.  Total
     /// storage allocated will be limit * size_of<Sample>
     pub fn with_limit_count(limit: usize) -> Self {
-        Self { sample_limit_count: limit }
+        Self {
+            sample_limit_count: limit,
+        }
     }
 
     /// The default amount of storage to allocate for tracing.  Currently 1 MB.
@@ -447,7 +453,11 @@ impl Sample {
             tid: sys_tid::current_tid().unwrap(),
             thread_name: Sample::thread_name(),
             pid: sys_pid::current_pid(),
-            args: Some(SampleArgs { payload, metadata_name: None, metadata_sort_index: None }),
+            args: Some(SampleArgs {
+                payload,
+                metadata_name: None,
+                metadata_sort_index: None,
+            }),
         }
     }
 
@@ -472,7 +482,11 @@ impl Sample {
             tid: sys_tid::current_tid().unwrap(),
             thread_name: Sample::thread_name(),
             pid: sys_pid::current_pid(),
-            args: Some(SampleArgs { payload, metadata_name: None, metadata_sort_index: None }),
+            args: Some(SampleArgs {
+                payload,
+                metadata_name: None,
+                metadata_sort_index: None,
+            }),
         }
     }
 
@@ -491,7 +505,11 @@ impl Sample {
             tid: sys_tid::current_tid().unwrap(),
             thread_name: Sample::thread_name(),
             pid: sys_pid::current_pid(),
-            args: Some(SampleArgs { payload, metadata_name: None, metadata_sort_index: None }),
+            args: Some(SampleArgs {
+                payload,
+                metadata_name: None,
+                metadata_sort_index: None,
+            }),
         }
     }
 
@@ -558,7 +576,10 @@ pub struct SampleGuard<'a> {
 impl<'a> SampleGuard<'a> {
     #[inline]
     pub fn new_disabled() -> Self {
-        Self { sample: None, trace: None }
+        Self {
+            sample: None,
+            trace: None,
+        }
     }
 
     #[inline]
@@ -628,7 +649,10 @@ pub struct Trace {
 
 impl Trace {
     pub fn disabled() -> Self {
-        Self { enabled: AtomicBool::new(false), samples: Mutex::new(FixedLifoDeque::new()) }
+        Self {
+            enabled: AtomicBool::new(false),
+            samples: Mutex::new(FixedLifoDeque::new()),
+        }
     }
 
     pub fn enabled(config: Config) -> Self {
@@ -733,7 +757,13 @@ impl Trace {
         let result = closure();
         let end = time::precise_time_ns();
         if self.is_enabled() {
-            self.record(Sample::new_duration(name, categories, None, start, end - start));
+            self.record(Sample::new_duration(
+                name,
+                categories,
+                None,
+                start,
+                end - start,
+            ));
         }
         result
     }
@@ -775,8 +805,9 @@ impl Trace {
 
         let mut as_vec = Vec::with_capacity(all_samples.len() + 10);
         let first_sample_timestamp = all_samples.front().map_or(0, |ref s| s.timestamp_us);
-        let tid =
-            all_samples.front().map_or_else(|| sys_tid::current_tid().unwrap(), |ref s| s.tid);
+        let tid = all_samples
+            .front()
+            .map_or_else(|| sys_tid::current_tid().unwrap(), |ref s| s.tid);
 
         if let Some(exe_name) = exe_name() {
             as_vec.push(Sample::new_metadata(
@@ -794,7 +825,9 @@ impl Trace {
                 if previous_name.is_none() || previous_name.unwrap() != *thread_name {
                     as_vec.push(Sample::new_metadata(
                         first_sample_timestamp,
-                        MetadataType::ThreadName { name: thread_name.to_string() },
+                        MetadataType::ThreadName {
+                            name: thread_name.to_string(),
+                        },
                         sample.tid,
                     ));
                 }
@@ -817,7 +850,11 @@ impl Trace {
         path: P,
         sort: bool,
     ) -> Result<(), chrome_trace_dump::Error> {
-        let traces = if sort { samples_cloned_sorted() } else { samples_cloned_unsorted() };
+        let traces = if sort {
+            samples_cloned_sorted()
+        } else {
+            samples_cloned_unsorted()
+        };
         let path: &Path = path.as_ref();
 
         if path.exists() {

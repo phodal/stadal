@@ -223,7 +223,10 @@ impl<W: Write + Send> RpcLoop<W> {
             needs_exit: AtomicBool::new(false),
             is_blocked: AtomicBool::new(false),
         }));
-        RpcLoop { reader: MessageReader::default(), peer: rpc_peer }
+        RpcLoop {
+            reader: MessageReader::default(),
+            peer: rpc_peer,
+        }
     }
 
     /// Gets a reference to the peer.
@@ -258,7 +261,9 @@ impl<W: Write + Send> RpcLoop<W> {
             let peer = self.get_raw_peer();
             peer.reset_needs_exit();
 
-            let ctx = RpcCtx { peer: Box::new(peer.clone()) };
+            let ctx = RpcCtx {
+                peer: Box::new(peer.clone()),
+            };
             scope.spawn(move |_| {
                 let mut stream = rf();
                 loop {
@@ -377,7 +382,9 @@ where
 
         // we don't want to block indefinitely if there's no current idle work,
         // because idle work could be scheduled from another thread.
-        let idle_timeout = time_to_next_timer.unwrap_or(MAX_IDLE_WAIT).min(MAX_IDLE_WAIT);
+        let idle_timeout = time_to_next_timer
+            .unwrap_or(MAX_IDLE_WAIT)
+            .min(MAX_IDLE_WAIT);
 
         if let Some(result) = peer.get_rx_timeout(idle_timeout) {
             return result;
@@ -412,7 +419,10 @@ impl<W: Write + Send + 'static> Peer for RawPeer<W> {
             "method": method,
             "params": params,
         })) {
-            error!("send error on send_rpc_notification method {}: {}", method, e);
+            error!(
+                "send error on send_rpc_notification method {}: {}",
+                method, e
+            );
         }
     }
 
@@ -439,7 +449,10 @@ impl<W: Write + Send + 'static> Peer for RawPeer<W> {
     }
 
     fn schedule_timer(&self, after: Instant, token: usize) {
-        self.0.timers.lock().unwrap().push(Timer { fire_after: after, token });
+        self.0.timers.lock().unwrap().push(Timer {
+            fire_after: after,
+            token,
+        });
     }
 }
 
@@ -593,7 +606,9 @@ mod tests {
     #[test]
     fn test_parse_notif() {
         let reader = MessageReader::default();
-        let json = reader.parse(r#"{"method": "hi", "params": {"words": "plz"}}"#).unwrap();
+        let json = reader
+            .parse(r#"{"method": "hi", "params": {"words": "plz"}}"#)
+            .unwrap();
         assert!(!json.is_response());
         let rpc = json.into_rpc::<Value, Value>().unwrap();
         match rpc {
@@ -605,8 +620,9 @@ mod tests {
     #[test]
     fn test_parse_req() {
         let reader = MessageReader::default();
-        let json =
-            reader.parse(r#"{"id": 5, "method": "hi", "params": {"words": "plz"}}"#).unwrap();
+        let json = reader
+            .parse(r#"{"id": 5, "method": "hi", "params": {"words": "plz"}}"#)
+            .unwrap();
         assert!(!json.is_response());
         let rpc = json.into_rpc::<Value, Value>().unwrap();
         match rpc {
@@ -619,8 +635,10 @@ mod tests {
     fn test_parse_bad_json() {
         // missing "" around params
         let reader = MessageReader::default();
-        let json =
-            reader.parse(r#"{"id": 5, "method": "hi", params: {"words": "plz"}}"#).err().unwrap();
+        let json = reader
+            .parse(r#"{"id": 5, "method": "hi", params: {"words": "plz"}}"#)
+            .err()
+            .unwrap();
 
         match json {
             ReadError::Json(..) => (),

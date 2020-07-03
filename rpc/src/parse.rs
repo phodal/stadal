@@ -117,7 +117,9 @@ impl RpcObject {
     /// return a `String` containing an error message. The caller should
     /// print this message and exit.
     pub fn into_response(mut self) -> Result<Response, String> {
-        let _ = self.get_id().ok_or("Response requires 'id' field.".to_string())?;
+        let _ = self
+            .get_id()
+            .ok_or("Response requires 'id' field.".to_string())?;
 
         if self.0.get("result").is_some() == self.0.get("error").is_some() {
             return Err("RPC response must contain exactly one of\
@@ -129,7 +131,11 @@ impl RpcObject {
         match result {
             Some(r) => Ok(Ok(r)),
             None => {
-                let error = self.0.as_object_mut().and_then(|obj| obj.remove("error")).unwrap();
+                let error = self
+                    .0
+                    .as_object_mut()
+                    .and_then(|obj| obj.remove("error"))
+                    .unwrap();
                 match serde_json::from_value::<RemoteError>(error) {
                     Ok(e) => Ok(Err(e)),
                     Err(e) => Err(format!("Error handling response: {:?}", e)),

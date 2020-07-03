@@ -1,12 +1,12 @@
-use std::{io, process};
 use std::path::{Path, PathBuf};
+use std::{io, process};
 
 use futures::executor::block_on;
-use heim::{memory, Result, units::information};
+use heim::{memory, units::information, Result};
 use log::{error, info};
 
-use xi_rpc::RpcLoop;
 use core_lib::application::Stadal;
+use xi_rpc::RpcLoop;
 
 fn setup_logging(logging_path: &Path) -> Result<()> {
     let level_filter = match std::env::var("XI_LOG") {
@@ -52,7 +52,10 @@ async fn main() {
     block_on(memory);
 
     if let Err(e) = setup_logging(PathBuf::from("./stadal.log").as_path()) {
-        eprintln!("[ERROR] setup_logging returned error, logging not enabled: {:?}", e);
+        eprintln!(
+            "[ERROR] setup_logging returned error, logging not enabled: {:?}",
+            e
+        );
     }
 
     match rpc_looper.mainloop(|| stdin.lock(), &mut state) {

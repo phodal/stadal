@@ -5,16 +5,20 @@ use serde::de::{self, Deserialize, Deserializer};
 use serde::ser::{self, Serialize, Serializer};
 use serde_json::{self, Value};
 
-use xi_rpc::{Handler, RemoteError, RpcCtx, RpcPeer};
+use crate::application::application::CoreNotification::{ClientStarted, TracingConfig};
 use std::path::PathBuf;
-use crate::application::application::CoreNotification::{TracingConfig, ClientStarted};
+use xi_rpc::{Handler, RemoteError, RpcCtx, RpcPeer};
 
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "method", content = "params")]
 pub enum CoreNotification {
-    TracingConfig { enabled: bool },
-    SetTheme { theme_name: String },
+    TracingConfig {
+        enabled: bool,
+    },
+    SetTheme {
+        theme_name: String,
+    },
     /// Notifies `xi-core` that the client has started.
     ClientStarted {
         #[serde(default)]
@@ -41,7 +45,7 @@ pub struct CoreState {
 impl CoreState {
     pub(crate) fn new(peer: &RpcPeer) -> Self {
         CoreState {
-            peer: Client::new(peer.clone())
+            peer: Client::new(peer.clone()),
         }
     }
     pub(crate) fn client_notification(&mut self, cmd: CoreNotification) {
@@ -49,14 +53,12 @@ impl CoreState {
         match cmd {
             ClientStarted { .. } => (),
             _ => {
-                 // self.not_command(view_id, language_id);
+                // self.not_command(view_id, language_id);
             }
         }
     }
 
-    pub(crate) fn finish_setup(&mut self, self_ref: WeakStadalCore) {
-
-    }
+    pub(crate) fn finish_setup(&mut self, self_ref: WeakStadalCore) {}
 
     pub(crate) fn handle_idle(&mut self, token: usize) {
         match token {
@@ -133,8 +135,11 @@ impl Handler for Stadal {
             }
         }
 
-
-        if let ClientStarted { ref config_dir, ref client_extras_dir } = rpc {
+        if let ClientStarted {
+            ref config_dir,
+            ref client_extras_dir,
+        } = rpc
+        {
             assert!(self.is_waiting(), "client_started can only be sent once");
             let state = CoreState::new(ctx.get_peer());
             let state = Arc::new(Mutex::new(state));

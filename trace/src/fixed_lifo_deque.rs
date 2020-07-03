@@ -50,7 +50,10 @@ impl<T> FixedLifoDeque<T> {
     /// Attempts to insert more than this number of elements will cause excess
     /// elements to first be evicted in FIFO order (i.e. from the front).
     pub fn with_limit(n: usize) -> Self {
-        FixedLifoDeque { storage: VecDeque::with_capacity(n), limit: n }
+        FixedLifoDeque {
+            storage: VecDeque::with_capacity(n),
+            limit: n,
+        }
     }
 
     /// This sets a new limit on the container.  Excess elements are dropped in
@@ -172,8 +175,10 @@ impl<T> FixedLifoDeque<T> {
     #[inline]
     fn drop_excess_for_inserting(&mut self, n_to_be_inserted: usize) {
         if self.storage.len() + n_to_be_inserted > self.limit {
-            let overflow =
-                self.storage.len().min(self.storage.len() + n_to_be_inserted - self.limit);
+            let overflow = self
+                .storage
+                .len()
+                .min(self.storage.len() + n_to_be_inserted - self.limit);
             self.storage.drain(..overflow);
         }
     }
@@ -218,7 +223,10 @@ impl<T> FixedLifoDeque<T> {
     }
 
     pub fn split_off(&mut self, at: usize) -> FixedLifoDeque<T> {
-        FixedLifoDeque { storage: self.storage.split_off(at), limit: self.limit }
+        FixedLifoDeque {
+            storage: self.storage.split_off(at),
+            limit: self.limit,
+        }
     }
 
     /// Always an O(m) operation where m is the length of `other'.

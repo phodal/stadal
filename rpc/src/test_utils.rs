@@ -65,9 +65,13 @@ impl DummyReader {
     /// Panics if a non-response message is received, or if no message
     /// is received after a reasonable time.
     pub fn expect_response(&mut self) -> Response {
-        let raw = self.next_timeout(Duration::from_secs(1)).expect("response should be received");
+        let raw = self
+            .next_timeout(Duration::from_secs(1))
+            .expect("response should be received");
         let val = raw.as_ref().ok().map(|v| serde_json::to_string(&v.0));
-        let resp = raw.map_err(|e| e.to_string()).and_then(|r| r.into_response());
+        let resp = raw
+            .map_err(|e| e.to_string())
+            .and_then(|r| r.into_response());
 
         match resp {
             Err(msg) => panic!("Bad response: {:?}. {}", val, msg),
@@ -76,7 +80,9 @@ impl DummyReader {
     }
 
     pub fn expect_object(&mut self) -> RpcObject {
-        self.next_timeout(Duration::from_secs(1)).expect("expected object").unwrap()
+        self.next_timeout(Duration::from_secs(1))
+            .expect("expected object")
+            .unwrap()
     }
 
     pub fn expect_rpc(&mut self, method: &str) -> RpcObject {
