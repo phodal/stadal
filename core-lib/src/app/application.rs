@@ -1,21 +1,63 @@
+use std::path::PathBuf;
 use std::sync::{Arc, Mutex, MutexGuard, Weak};
 
+use heim::{memory, units::information};
 use log::{error, info, warn};
 use serde::de::{self, Deserialize, Deserializer};
 use serde::ser::{self, Serialize, Serializer};
 use serde_json::{self, Value};
+use futures::executor::block_on;
 
-use std::path::PathBuf;
-use xi_rpc::{Handler, RemoteError, RpcCtx, RpcPeer};
+use xi_rpc::{Handler, RpcCtx, RpcPeer, RemoteError};
+
 use crate::infra::notif::CoreNotification;
-use crate::infra::notif::CoreNotification::{TracingConfig, ClientStarted};
+use crate::infra::notif::CoreNotification::{ClientStarted, TracingConfig};
 
 pub struct Client(RpcPeer);
+
+#[derive(Clone, Debug, Default, Serialize, Deserialize)]
+pub struct StadalMemory {
+    total: String,
+    free: String,
+    available: String
+}
+
+async fn get_memory() -> StadalMemory {
+    let memory = memory::memory().await.unwrap();
+
+    let total = memory.total().get::<information::megabyte>();
+    let free = memory.free().get::<information::megabyte>();
+    let available = memory.available().get::<information::megabyte>();
+
+    StadalMemory {
+        total: total.to_string(),
+        free: free.to_string(),
+        available: available.to_string()
+    }
+}
 
 impl Client {
     pub fn new(peer: RpcPeer) -> Self {
         Client(peer)
     }
+
+    pub fn send_memory(&self) {
+        self.0.send_rpc_notification(
+            "memory",
+            &json!({
+                "name": "",
+                "theme": "",
+            }),
+        );
+    }
+}
+
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[serde(rename_all = "snake_case")]
+#[serde(tag = "method", content = "params")]
+pub enum CoreRequest {
+    GetConfig {},
+    DebugGetContents {}
 }
 
 #[allow(dead_code)]
@@ -29,12 +71,28 @@ impl CoreState {
             peer: Client::new(peer.clone()),
         }
     }
+
     pub(crate) fn client_notification(&mut self, cmd: CoreNotification) {
         use self::CoreNotification::*;
         match cmd {
+            SendMemory {} => {
+                self.peer.send_memory();
+            },
             ClientStarted { .. } => (),
             _ => {
                 // self.not_command(view_id, language_id);
+            }
+        }
+    }
+
+    pub(crate) fn client_request(&mut self, cmd: CoreRequest) -> Result<Value, RemoteError> {
+        use self::CoreRequest::*;
+        match cmd {
+            GetConfig { } => {
+                Ok(json!(1))
+            }
+            DebugGetContents {} => {
+                Ok(json!(1))
             }
         }
     }
@@ -101,7 +159,7 @@ impl Stadal {
 
 impl Handler for Stadal {
     type Notification = CoreNotification;
-    type Request = ();
+    type Request = CoreRequest;
 
     fn handle_notification(&mut self, ctx: &RpcCtx, rpc: Self::Notification) {
         // We allow tracing to be enabled before event `client_started`
@@ -133,9 +191,8 @@ impl Handler for Stadal {
     }
 
     fn handle_request(&mut self, ctx: &RpcCtx, rpc: Self::Request) -> Result<Value, RemoteError> {
-        println!("!!!!!");
-        warn!("zzz");
-        Ok(json!(1))
+        self.inner().client_request(rpc)
+
     }
 
     fn idle(&mut self, _ctx: &RpcCtx, token: usize) {

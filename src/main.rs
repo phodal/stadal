@@ -47,10 +47,6 @@ async fn main() {
     let stdout = io::stdout();
     let mut rpc_looper = RpcLoop::new(stdout);
 
-    let memory = print_memory();
-
-    block_on(memory);
-
     if let Err(e) = setup_logging(PathBuf::from("./stadal.log").as_path()) {
         eprintln!(
             "[ERROR] setup_logging returned error, logging not enabled: {:?}",

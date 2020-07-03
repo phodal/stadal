@@ -37,6 +37,11 @@ requests
 {"method":"client_started","params":{}}
 ```
 
+```
+{"method":"client_started","params":{}}
+{"method":"send_memory","params":{}}
+```
+
 LICENSE
 ===
 

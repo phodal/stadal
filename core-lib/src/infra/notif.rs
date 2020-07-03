@@ -10,6 +10,8 @@ pub enum CoreNotification {
     SetTheme {
         theme_name: String,
     },
+
+    SendMemory {},
     /// Notifies `xi-core` that the client has started.
     ClientStarted {
         #[serde(default)]

@@ -125,6 +125,8 @@ checksum = "b3a71ab494c0b5b860bdc8407ae08978052417070c2ced38573a9157ad75b8ac"
 name = "core-lib"
 version = "0.1.0"
 dependencies = [
+ "futures",
+ "heim",
  "log",
  "serde",
  "serde_derive",
