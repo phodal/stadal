@@ -5,6 +5,9 @@ use serde::de::{self, Deserialize, Deserializer};
 use serde::ser::{self, Serialize, Serializer};
 use serde_json::{self, Value};
 
+#[derive(Serialize, Deserialize, Debug, PartialEq)]
+#[serde(rename_all = "snake_case")]
+#[serde(tag = "method", content = "params")]
 pub enum CoreNotification {
     SetTheme { theme_name: String },
     TracingConfig { enabled: bool },

@@ -4,12 +4,7 @@ use heim::{memory, Result, units::information};
 use log::error;
 
 use xi_rpc::RpcLoop;
-
-use crate::application::application::Stadal;
-
-mod application;
-mod domain;
-mod infrastructure;
+use stadal::application::Stadal;
 
 #[tokio::main]
 async fn main() -> Result<()> {

@@ -905,6 +905,7 @@ dependencies = [
  "heim",
  "log",
  "serde",
+ "serde_derive",
  "serde_json",
  "tokio",
  "xi-rpc",

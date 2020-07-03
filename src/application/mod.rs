@@ -1,3 +1,3 @@
-pub mod application;
+mod application;
 
-use application::Stadal;
+pub use crate::application::application::Stadal;
