@@ -22,3 +22,8 @@ Library:
  - [heim](https://github.com/heim-rs/heim) is an ongoing attempt to create the best tool for system information fetching (ex., CPU, memory, disks or processes stats) in the Rust crates ecosystem.
 
 [Status library comparison](https://github.com/heim-rs/heim/blob/master/COMPARISON.md)
+
+LICENSE
+===
+
+RPC based on [xi-editor](https://github.com/xi-editor/xi-editor) with Apache 2.0 & Inspired by [xi-term](https://github.com/xi-frontend/xi-term)
