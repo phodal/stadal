@@ -957,6 +957,7 @@ dependencies = [
  "serde_json",
  "tokio",
  "xi-rpc",
+ "xi-trace",
 ]
 
 [[package]]

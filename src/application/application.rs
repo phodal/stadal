@@ -6,13 +6,23 @@ use serde::ser::{self, Serialize, Serializer};
 use serde_json::{self, Value};
 
 use xi_rpc::{Handler, RemoteError, RpcCtx, RpcPeer};
+use std::path::PathBuf;
+use crate::application::application::CoreNotification::TracingConfig;
 
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
 #[serde(rename_all = "snake_case")]
 #[serde(tag = "method", content = "params")]
 pub enum CoreNotification {
-    SetTheme { theme_name: String },
     TracingConfig { enabled: bool },
+    SetTheme { theme_name: String },
+    /// Notifies `xi-core` that the client has started.
+    ClientStarted {
+        #[serde(default)]
+        config_dir: Option<PathBuf>,
+        /// Path to additional plugins, included by the client.
+        #[serde(default)]
+        client_extras_dir: Option<PathBuf>,
+    },
 }
 
 pub struct Client(RpcPeer);
@@ -36,9 +46,13 @@ impl CoreState {
     }
     pub(crate) fn client_notification(&mut self, cmd: CoreNotification) {
         use self::CoreNotification::*;
+        match cmd {
+            ClientStarted { .. } => (),
+            _ => {
+                 // self.not_command(view_id, language_id);
+            }
+        }
     }
-
-    fn do_new_view(&mut self) {}
 
     pub(crate) fn finish_setup(&mut self, self_ref: WeakStadalCore) {
 
@@ -103,17 +117,28 @@ impl Stadal {
 }
 
 impl Handler for Stadal {
-    type Notification = ();
+    type Notification = CoreNotification;
     type Request = ();
 
     fn handle_notification(&mut self, ctx: &RpcCtx, rpc: Self::Notification) {
+        // We allow tracing to be enabled before event `client_started`
+        if let TracingConfig { enabled } = rpc {
+            match enabled {
+                // true => xi_trace::enable_tracing(),
+                // false => xi_trace::disable_tracing(),
+            }
+            info!("tracing in core = {:?}", enabled);
+            if self.is_waiting() {
+                return;
+            }
+        }
+
+
         let state = CoreState::new(ctx.get_peer());
         let state = Arc::new(Mutex::new(state));
         *self = Stadal::Running(state);
         let weak_self = self.weak_self().unwrap();
         self.inner().finish_setup(weak_self);
-
-        println!("handle_notification");
     }
 
     fn handle_request(&mut self, ctx: &RpcCtx, rpc: Self::Request) -> Result<Value, RemoteError> {

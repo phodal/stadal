@@ -23,6 +23,14 @@ Library:
 
 [Status library comparison](https://github.com/heim-rs/heim/blob/master/COMPARISON.md)
 
+## Notes
+
+requests
+
+```
+{"method":"client_started","params":{}}
+```
+
 LICENSE
 ===
 

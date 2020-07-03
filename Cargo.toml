@@ -23,6 +23,9 @@ dirs = "2.0"
 [dependencies.xi-rpc]
 path = "rpc"
 
+[dependencies.xi-trace]
+path = "trace"
+
 [workspace]
 members = [
   "rpc",
