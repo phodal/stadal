@@ -1,9 +1,9 @@
-use std::{fs, io, process};
+use std::{io, process};
 use std::path::{Path, PathBuf};
 
 use futures::executor::block_on;
 use heim::{memory, Result, units::information};
-use log::{error, info, warn};
+use log::{error, info};
 
 use xi_rpc::RpcLoop;
 use core_lib::application::Stadal;
