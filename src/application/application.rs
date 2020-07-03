@@ -7,7 +7,7 @@ use serde_json::{self, Value};
 
 use xi_rpc::{Handler, RemoteError, RpcCtx, RpcPeer};
 use std::path::PathBuf;
-use crate::application::application::CoreNotification::TracingConfig;
+use crate::application::application::CoreNotification::{TracingConfig, ClientStarted};
 
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
 #[serde(rename_all = "snake_case")]
@@ -124,8 +124,8 @@ impl Handler for Stadal {
         // We allow tracing to be enabled before event `client_started`
         if let TracingConfig { enabled } = rpc {
             match enabled {
-                // true => xi_trace::enable_tracing(),
-                // false => xi_trace::disable_tracing(),
+                true => xi_trace::enable_tracing(),
+                false => xi_trace::disable_tracing(),
             }
             info!("tracing in core = {:?}", enabled);
             if self.is_waiting() {
@@ -134,11 +134,16 @@ impl Handler for Stadal {
         }
 
 
-        let state = CoreState::new(ctx.get_peer());
-        let state = Arc::new(Mutex::new(state));
-        *self = Stadal::Running(state);
-        let weak_self = self.weak_self().unwrap();
-        self.inner().finish_setup(weak_self);
+        if let ClientStarted { ref config_dir, ref client_extras_dir } = rpc {
+            assert!(self.is_waiting(), "client_started can only be sent once");
+            let state = CoreState::new(ctx.get_peer());
+            let state = Arc::new(Mutex::new(state));
+            *self = Stadal::Running(state);
+            let weak_self = self.weak_self().unwrap();
+            self.inner().finish_setup(weak_self);
+        }
+
+        self.inner().client_notification(rpc);
     }
 
     fn handle_request(&mut self, ctx: &RpcCtx, rpc: Self::Request) -> Result<Value, RemoteError> {

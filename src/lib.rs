@@ -8,3 +8,5 @@ extern crate serde;
 pub mod application;
 pub mod domain;
 pub mod infrastructure;
+
+extern crate xi_trace;
