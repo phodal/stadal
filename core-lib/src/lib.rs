@@ -5,8 +5,8 @@ extern crate serde_json;
 
 extern crate serde;
 
-pub mod application;
+pub mod app;
 pub mod domain;
-pub mod infrastructure;
+pub mod infra;
 
 extern crate xi_trace;

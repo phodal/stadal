@@ -5,29 +5,10 @@ use serde::de::{self, Deserialize, Deserializer};
 use serde::ser::{self, Serialize, Serializer};
 use serde_json::{self, Value};
 
-use crate::application::application::CoreNotification::{ClientStarted, TracingConfig};
 use std::path::PathBuf;
 use xi_rpc::{Handler, RemoteError, RpcCtx, RpcPeer};
-
-#[derive(Serialize, Deserialize, Debug, PartialEq)]
-#[serde(rename_all = "snake_case")]
-#[serde(tag = "method", content = "params")]
-pub enum CoreNotification {
-    TracingConfig {
-        enabled: bool,
-    },
-    SetTheme {
-        theme_name: String,
-    },
-    /// Notifies `xi-core` that the client has started.
-    ClientStarted {
-        #[serde(default)]
-        config_dir: Option<PathBuf>,
-        /// Path to additional plugins, included by the client.
-        #[serde(default)]
-        client_extras_dir: Option<PathBuf>,
-    },
-}
+use crate::infra::infra::CoreNotification;
+use crate::infra::infra::CoreNotification::{TracingConfig, ClientStarted};
 
 pub struct Client(RpcPeer);
 

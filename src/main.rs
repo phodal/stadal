@@ -5,11 +5,11 @@ use futures::executor::block_on;
 use heim::{memory, units::information, Result};
 use log::{error, info};
 
-use core_lib::application::Stadal;
+use core_lib::app::Stadal;
 use xi_rpc::RpcLoop;
 
 fn setup_logging(logging_path: &Path) -> Result<()> {
-    let level_filter = match std::env::var("XI_LOG") {
+    let level_filter = match std::env::var("SD_LOG") {
         Ok(level) => match level.to_lowercase().as_ref() {
             "trace" => log::LevelFilter::Trace,
             "debug" => log::LevelFilter::Debug,
