@@ -27,4 +27,5 @@ path = "rpc"
 members = [
   "rpc",
   "trace",
+  "client",
 ]
