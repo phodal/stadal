@@ -1,4 +1,5 @@
 use std::{io, process};
+use futures::executor::block_on;
 
 use heim::{memory, Result, units::information};
 use log::error;
@@ -7,11 +8,15 @@ use xi_rpc::RpcLoop;
 use stadal::application::Stadal;
 
 #[tokio::main]
-async fn main() -> Result<()> {
+async fn main() {
     let mut state = Stadal::new();
     let stdin = io::stdin();
     let stdout = io::stdout();
     let mut rpc_looper = RpcLoop::new(stdout);
+
+    let memory = print_memory();
+
+    block_on(memory);
 
     match rpc_looper.mainloop(|| stdin.lock(), &mut state) {
         Ok(_) => (),
@@ -20,10 +25,6 @@ async fn main() -> Result<()> {
             process::exit(1);
         }
     }
-
-    print_memory().await;
-
-    Ok(())
 }
 
 async fn print_memory() {

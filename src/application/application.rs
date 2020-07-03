@@ -1,4 +1,4 @@
-use std::sync::{Mutex, Arc, Weak};
+use std::sync::{Mutex, Arc, Weak, MutexGuard};
 use xi_rpc::{Handler, RpcCtx, RemoteError};
 
 use serde::de::{self, Deserialize, Deserializer};
@@ -48,6 +48,29 @@ impl Stadal {
         match *self {
             Stadal::Waiting => true,
             _ => false,
+        }
+    }
+
+    /// Returns a guard to the core state. A convenience around `Mutex::lock`.
+    ///
+    /// # Panics
+    ///
+    /// Panics if core has not yet received the `client_started` message.
+    pub fn inner(&self) -> MutexGuard<CoreState> {
+        match self {
+            Stadal::Running(ref inner) => inner.lock().unwrap(),
+            Stadal::Waiting => panic!(
+                "core does not start until client_started \
+                 RPC is received"
+            ),
+        }
+    }
+
+    /// Returns a new reference to the core state, if core is running.
+    fn weak_self(&self) -> Option<WeakStadal> {
+        match self {
+            Stadal::Running(ref inner) => Some(WeakStadal(Arc::downgrade(inner))),
+            Stadal::Waiting => None,
         }
     }
 }
