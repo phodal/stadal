@@ -4,6 +4,7 @@ use heim::{memory, Result, units::information};
 use log::{error};
 
 use crate::application::application::Stadal;
+use xi_rpc::RpcLoop;
 
 mod application;
 mod domain;
@@ -16,13 +17,13 @@ async fn main() -> Result<()> {
     let stdout = io::stdout();
     let mut rpc_looper = RpcLoop::new(stdout);
 
-    // match rpc_looper.mainloop(|| stdin.lock(), &mut state) {
-    //     Ok(_) => (),
-    //     Err(err) => {
-    //         error!("exited with error:\n{:?}", err);
-    //         process::exit(1);
-    //     }
-    // }
+    match rpc_looper.mainloop(|| stdin.lock(), &mut state) {
+        Ok(_) => (),
+        Err(err) => {
+            error!("exited with error:\n{:?}", err);
+            process::exit(1);
+        }
+    }
 
     print_memory().await;
 
