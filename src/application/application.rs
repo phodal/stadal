@@ -1,14 +1,26 @@
 use std::sync::{Mutex, Arc, Weak};
 use xi_rpc::{Handler, RpcCtx, RemoteError};
-use serde_json::Value;
 
-#[allow(dead_code)]
-pub struct CoreState {
+use serde::de::{self, Deserialize, Deserializer};
+use serde::ser::{self, Serialize, Serializer};
+use serde_json::{self, Value};
 
+pub enum CoreNotification {
+    SetTheme { theme_name: String },
+    TracingConfig { enabled: bool },
 }
 
-impl CoreState {
+#[allow(dead_code)]
+pub struct CoreState {}
 
+impl CoreState {
+    pub(crate) fn client_notification(&mut self, cmd: CoreNotification) {
+        use self::CoreNotification::*;
+    }
+
+    fn do_new_view(&mut self) {
+
+    }
 }
 
 pub enum Stadal {

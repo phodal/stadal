@@ -1,10 +1,11 @@
 use std::{io, process};
 
 use heim::{memory, Result, units::information};
-use log::{error};
+use log::error;
+
+use xi_rpc::RpcLoop;
 
 use crate::application::application::Stadal;
-use xi_rpc::RpcLoop;
 
 mod application;
 mod domain;
