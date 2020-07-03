@@ -5,8 +5,8 @@ use futures::executor::block_on;
 use heim::{memory, Result, units::information};
 use log::{error, info, warn};
 
-use stadal::application::Stadal;
 use xi_rpc::RpcLoop;
+use core_lib::application::Stadal;
 
 fn setup_logging(logging_path: &Path) -> Result<()> {
     let level_filter = match std::env::var("XI_LOG") {

@@ -122,6 +122,18 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b3a71ab494c0b5b860bdc8407ae08978052417070c2ced38573a9157ad75b8ac"
 
 [[package]]
+name = "core-lib"
+version = "0.1.0"
+dependencies = [
+ "log",
+ "serde",
+ "serde_derive",
+ "serde_json",
+ "xi-rpc",
+ "xi-trace",
+]
+
+[[package]]
 name = "crossbeam-utils"
 version = "0.7.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -947,6 +959,7 @@ name = "stadal"
 version = "0.1.0"
 dependencies = [
  "chrono",
+ "core-lib",
  "dirs",
  "fern",
  "futures",

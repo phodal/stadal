@@ -20,6 +20,9 @@ chrono = "0.4.5"
 fern = "0.6"
 dirs = "2.0"
 
+[dependencies.core-lib]
+path = "core-lib"
+
 [dependencies.xi-rpc]
 path = "rpc"
 
@@ -31,4 +34,5 @@ members = [
   "rpc",
   "trace",
   "client",
+  "core-lib"
 ]
