@@ -7,8 +7,8 @@ use serde_json::{self, Value};
 
 use std::path::PathBuf;
 use xi_rpc::{Handler, RemoteError, RpcCtx, RpcPeer};
-use crate::infra::infra::CoreNotification;
-use crate::infra::infra::CoreNotification::{TracingConfig, ClientStarted};
+use crate::infra::notif::CoreNotification;
+use crate::infra::notif::CoreNotification::{TracingConfig, ClientStarted};
 
 pub struct Client(RpcPeer);
 
