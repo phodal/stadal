@@ -1,2 +1,2 @@
-pub mod notif;
 pub mod infra;
+pub mod notif;

@@ -1,14 +1,14 @@
 use std::path::PathBuf;
 use std::sync::{Arc, Mutex, MutexGuard, Weak};
 
+use futures::executor::block_on;
 use heim::{memory, units::information};
 use log::{error, info, warn};
 use serde::de::{self, Deserialize, Deserializer};
 use serde::ser::{self, Serialize, Serializer};
 use serde_json::{self, Value};
-use futures::executor::block_on;
 
-use xi_rpc::{Handler, RpcCtx, RpcPeer, RemoteError};
+use xi_rpc::{Handler, RemoteError, RpcCtx, RpcPeer};
 
 use crate::infra::notif::CoreNotification;
 use crate::infra::notif::CoreNotification::{ClientStarted, TracingConfig};
@@ -19,7 +19,7 @@ pub struct Client(RpcPeer);
 pub struct StadalMemory {
     total: String,
     free: String,
-    available: String
+    available: String,
 }
 
 async fn get_memory() -> StadalMemory {
@@ -32,7 +32,7 @@ async fn get_memory() -> StadalMemory {
     StadalMemory {
         total: total.to_string(),
         free: free.to_string(),
-        available: available.to_string()
+        available: available.to_string(),
     }
 }
 
@@ -57,7 +57,7 @@ impl Client {
 #[serde(tag = "method", content = "params")]
 pub enum CoreRequest {
     GetConfig {},
-    DebugGetContents {}
+    DebugGetContents {},
 }
 
 #[allow(dead_code)]
@@ -77,7 +77,7 @@ impl CoreState {
         match cmd {
             SendMemory {} => {
                 self.peer.send_memory();
-            },
+            }
             ClientStarted { .. } => (),
             _ => {
                 // self.not_command(view_id, language_id);
@@ -88,12 +88,8 @@ impl CoreState {
     pub(crate) fn client_request(&mut self, cmd: CoreRequest) -> Result<Value, RemoteError> {
         use self::CoreRequest::*;
         match cmd {
-            GetConfig { } => {
-                Ok(json!(1))
-            }
-            DebugGetContents {} => {
-                Ok(json!(1))
-            }
+            GetConfig {} => Ok(json!(1)),
+            DebugGetContents {} => Ok(json!(1)),
         }
     }
 
@@ -192,7 +188,6 @@ impl Handler for Stadal {
 
     fn handle_request(&mut self, ctx: &RpcCtx, rpc: Self::Request) -> Result<Value, RemoteError> {
         self.inner().client_request(rpc)
-
     }
 
     fn idle(&mut self, _ctx: &RpcCtx, token: usize) {
