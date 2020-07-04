@@ -1,3 +1,5 @@
+mod window;
+
 mod frontend;
 pub use self::frontend::{TuiServiceBuilder};
 

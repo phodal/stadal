@@ -5,24 +5,24 @@ use tokio::io;
 
 use xrl::{Client, ClientError, XiNotification};
 use crate::core::Command;
+use crate::core::window::Window;
 
 pub enum CoreEvent {
     Notify(XiNotification),
 }
 
 pub struct Stadui {
-    client: Client,
     exit: bool,
+    window: Window,
     core_events: UnboundedReceiver<CoreEvent>,
 }
 
 impl Stadui {
-    /// Create a new Tui instance.
     pub fn new(client: Client, events: UnboundedReceiver<CoreEvent>) -> Result<Self, Error> {
         Ok(Stadui {
             exit: false,
-            client,
             core_events: events,
+            window: Window::new(client),
         })
     }
 
@@ -37,14 +37,9 @@ impl Stadui {
     pub fn run_command(&mut self, cmd: Command) {
         match cmd {
             Command::SendMemory => {
-                tokio::spawn(self.send_memory().map_err(|_| ()));
+                tokio::spawn(self.window.send_memory().map_err(|_| ()));
             }
         }
-    }
-
-    fn send_memory(&mut self) -> impl Future<Item=(), Error=ClientError> {
-        let params = json!("");
-        self.client.notify("send_memory", params).and_then(|_| Ok(()))
     }
 
     fn poll_rpc(&mut self) {
