@@ -1,4 +1,5 @@
 use std::path::PathBuf;
+use core::fmt;
 
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
 #[serde(rename_all = "snake_case")]
@@ -20,4 +21,10 @@ pub enum CoreNotification {
         #[serde(default)]
         client_extras_dir: Option<PathBuf>,
     },
+}
+
+impl fmt::Display for CoreNotification {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:?}", self)
+    }
 }

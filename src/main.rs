@@ -98,8 +98,6 @@ async fn main() {
     let mut directory_path = get_logging_directory_path(PathBuf::from("stadal")).unwrap();
     directory_path.push(PathBuf::from("stadal.log"));
 
-    // let logging_path = directory_path.as_ref().map(|p: &PathBuf| -> &Path { p.as_path() }).ok();
-
     if let Err(e) = setup_logging(Some(directory_path.as_path())) {
         eprintln!("[ERROR] setup_logging returned error, logging not enabled: {:?}", e);
     }

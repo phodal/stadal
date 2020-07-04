@@ -74,6 +74,7 @@ impl CoreState {
 
     pub(crate) fn client_notification(&mut self, cmd: CoreNotification) {
         use self::CoreNotification::*;
+        info!("client notification: {}", cmd);
         match cmd {
             SendMemory {} => {
                 self.peer.send_memory();
