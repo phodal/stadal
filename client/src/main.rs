@@ -181,7 +181,7 @@ fn run() -> Result<(), Error> {
         );
 
         tokio::spawn(future::lazy(move || {
-            let conf_dir = BaseDirectories::with_prefix("xi")
+            let conf_dir = BaseDirectories::with_prefix("stadal")
                 .ok()
                 .and_then(|dirs| Some(dirs.get_config_home().to_string_lossy().into_owned()));
 
@@ -193,9 +193,6 @@ fn run() -> Result<(), Error> {
                     info!("initializing the TUI");
                     let mut ui = Stadui::new(client_clone, core_events_rx)
                         .expect("failed to initialize the TUI");
-                    // tui.run_command(Command::Open(
-                    //     matches.value_of("file").map(ToString::to_string),
-                    // ));
                     // tui.run_command(Command::SetTheme("base16-eighties.dark".into()));
                     ui.map_err(|e| error!("TUI exited with an error: {:?}", e));
                     Ok(())
