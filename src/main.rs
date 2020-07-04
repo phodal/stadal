@@ -36,7 +36,7 @@ fn setup_logging(logging_path: &Path) -> Result<()> {
     fern_dispatch = fern_dispatch.chain(fern::log_file(logging_path)?);
     fern_dispatch.apply();
 
-    info!("Writing logs to: {}", logging_path.display());
+    // info!("Writing logs to: {}", logging_path.display());
     Ok(())
 }
 

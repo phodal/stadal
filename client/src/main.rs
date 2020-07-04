@@ -1,19 +1,24 @@
 #[macro_use]
-extern crate log;
+extern crate serde_json;
+
 extern crate futures;
+#[macro_use]
+extern crate log;
 extern crate log4rs;
 
+
+use std::io;
+
 use failure::{AsFail, Error, Fail};
+use futures::{Async, future, Future, Poll, Sink, Stream};
 use futures::sync::mpsc::{unbounded, UnboundedReceiver, UnboundedSender};
 use futures::sync::oneshot::{self, Receiver, Sender};
-use futures::{future, Async, Future, Poll, Sink, Stream};
-
-use log::LevelFilter;
 use log4rs::append::file::FileAppender;
 use log4rs::config::{Appender, Config, Logger, Root};
+use log::LevelFilter;
 use xdg::BaseDirectories;
-use xrl::{spawn, Client, Frontend, FrontendBuilder, XiNotification};
-use std::io;
+
+use xrl::{Client, ClientError, Frontend, FrontendBuilder, spawn, XiNotification};
 
 pub struct TuiService(UnboundedSender<CoreEvent>);
 
@@ -119,6 +124,20 @@ impl Stadui {
             }
         };
     }
+
+    pub fn run_command(&mut self, cmd: Command) {
+        match cmd {
+            Command::SendMemory => {
+                tokio::spawn(self.send_memory().map_err(|_| ()));
+            }
+        }
+    }
+
+    fn send_memory(&mut self) -> impl Future<Item = (), Error = ClientError> {
+        let params = json!("");
+        self.client.notify("send_memory", params).and_then(|_| Ok(()))
+    }
+
     fn poll_rpc(&mut self) {
         debug!("polling for RPC messages");
         loop {
@@ -159,6 +178,11 @@ impl Future for Stadui {
 }
 
 
+#[derive(Debug)]
+pub enum Command {
+    SendMemory,
+}
+
 fn run() -> Result<(), Error> {
     configure_logs("client.log");
     tokio::run(future::lazy(move || {
@@ -193,9 +217,8 @@ fn run() -> Result<(), Error> {
                     info!("initializing the TUI");
                     let mut ui = Stadui::new(client_clone, core_events_rx)
                         .expect("failed to initialize the TUI");
-                    // tui.run_command(Command::SetTheme("base16-eighties.dark".into()));
-                    ui.map_err(|e| error!("TUI exited with an error: {:?}", e));
-                    Ok(())
+                    ui.run_command(Command::SendMemory);
+                    ui.map_err(|e| error!("TUI exited with an error: {:?}", e))
                 })
         }));
 
