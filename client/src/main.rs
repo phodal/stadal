@@ -13,6 +13,7 @@ use log4rs::append::file::FileAppender;
 use log4rs::config::{Appender, Config, Logger, Root};
 use xdg::BaseDirectories;
 use xrl::{spawn, Client, Frontend, FrontendBuilder, XiNotification};
+use std::io;
 
 pub struct TuiService(UnboundedSender<CoreEvent>);
 
@@ -95,6 +96,69 @@ fn configure_logs(logfile: &str) {
     let _ = log4rs::init_config(config).unwrap();
 }
 
+pub struct Stadui {
+    client: Client,
+    exit: bool,
+    core_events: UnboundedReceiver<CoreEvent>,
+}
+
+impl Stadui {
+    /// Create a new Tui instance.
+    pub fn new(client: Client, events: UnboundedReceiver<CoreEvent>) -> Result<Self, Error> {
+        Ok(Stadui {
+            exit: false,
+            client,
+            core_events: events,
+        })
+    }
+
+    fn handle_core_event(&mut self, event: CoreEvent) {
+        match event {
+            CoreEvent::Notify(notification) => match notification {
+                _ => info!("ignoring Xi core notification: {:?}", notification),
+            }
+        };
+    }
+    fn poll_rpc(&mut self) {
+        debug!("polling for RPC messages");
+        loop {
+            match self.core_events.poll() {
+                Ok(Async::Ready(Some(event))) => self.handle_core_event(event),
+                Ok(Async::Ready(None)) => {
+                    info!("The RPC endpoint exited normally. Shutting down the TUI");
+                    self.exit = true;
+                    return;
+                }
+                Ok(Async::NotReady) => {
+                    debug!("no more RPC event, done polling");
+                    return;
+                }
+                Err(e) => {
+                    error!("The RPC endpoint exited with an error: {:?}", e);
+                    error!("Shutting down the TUI");
+                    self.exit = true;
+                    return;
+                }
+            }
+        }
+    }
+}
+
+impl Future for Stadui {
+    type Item = ();
+    type Error = io::Error;
+
+    fn poll(&mut self) -> Poll<Self::Item, Self::Error> {
+        self.poll_rpc();
+        if self.exit {
+            info!("exiting the TUI");
+            return Ok(Async::Ready(()));
+        }
+        Ok(Async::NotReady)
+    }
+}
+
+
 fn run() -> Result<(), Error> {
     configure_logs("client.log");
     tokio::run(future::lazy(move || {
@@ -104,7 +168,7 @@ fn run() -> Result<(), Error> {
             "/Users/fdhuang/repractise/stadal/target/debug/stadal",
             tui_service_builder,
         )
-        .unwrap();
+            .unwrap();
 
         info!("starting logging xi-core errors");
         tokio::spawn(
@@ -127,13 +191,13 @@ fn run() -> Result<(), Error> {
                 .map_err(|e| error!("failed to send \"client_started\" {:?}", e))
                 .and_then(move |_| {
                     info!("initializing the TUI");
-                    // let mut tui = Tui::new(client_clone, core_events_rx)
-                    //     .expect("failed to initialize the TUI");
+                    let mut ui = Stadui::new(client_clone, core_events_rx)
+                        .expect("failed to initialize the TUI");
                     // tui.run_command(Command::Open(
                     //     matches.value_of("file").map(ToString::to_string),
                     // ));
                     // tui.run_command(Command::SetTheme("base16-eighties.dark".into()));
-                    // tui.map_err(|e| error!("TUI exited with an error: {:?}", e))
+                    ui.map_err(|e| error!("TUI exited with an error: {:?}", e));
                     Ok(())
                 })
         }));
