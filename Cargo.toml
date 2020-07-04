@@ -38,5 +38,6 @@ members = [
   "trace",
   "client",
   "core-lib",
-  "xrl"
+  "xrl",
+  "stadal-gui/native"
 ]
