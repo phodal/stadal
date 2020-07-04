@@ -5,20 +5,16 @@ extern crate log4rs;
 #[macro_use]
 extern crate serde_json;
 
-use std::io;
-
-use failure::{AsFail, Error, Fail};
-use futures::{Async, future, Future, Poll, Sink, Stream};
-use futures::sync::mpsc::{unbounded, UnboundedReceiver, UnboundedSender};
-use futures::sync::oneshot::{self, Receiver, Sender};
+use failure::{Error};
+use futures::{future, Future, Stream};
 use log4rs::append::file::FileAppender;
 use log4rs::config::{Appender, Config, Logger, Root};
 use log::LevelFilter;
 use xdg::BaseDirectories;
 
-use xrl::{Client, ClientError, FrontendBuilder, spawn, XiNotification};
+use xrl::spawn;
 
-use crate::core::{Command, CoreEvent, Stadui, TuiServiceBuilder};
+use crate::core::{Command, Stadui, TuiServiceBuilder};
 
 mod core;
 

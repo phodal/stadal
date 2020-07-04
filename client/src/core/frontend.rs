@@ -1,8 +1,8 @@
-use futures::{Async, future, Future, Poll, Sink, Stream};
+use futures::{Future, Poll, Sink};
 use futures::sync::mpsc::{unbounded, UnboundedReceiver, UnboundedSender};
-use futures::sync::oneshot::{self, Receiver, Sender};
+use futures::sync::oneshot::Receiver;
 
-use xrl::{IntoStaticFuture, XiNotification, Client, FrontendBuilder, Frontend};
+use xrl::{Client, Frontend, FrontendBuilder, XiNotification};
 
 use crate::core::CoreEvent;
 

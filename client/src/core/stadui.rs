@@ -1,14 +1,9 @@
-use failure::{AsFail, Error, Fail};
-use futures::{Async, future, Future, Poll, Sink, Stream};
-use futures::sync::mpsc::{unbounded, UnboundedReceiver, UnboundedSender};
-use futures::sync::oneshot::{self, Receiver, Sender};
-use log4rs::append::file::FileAppender;
-use log4rs::config::{Appender, Config, Logger, Root};
-use log::LevelFilter;
+use failure::Error;
+use futures::{Async, Future, Poll, Stream};
+use futures::sync::mpsc::{UnboundedReceiver};
 use tokio::io;
-use xdg::BaseDirectories;
 
-use xrl::{Client, ClientError, Frontend, FrontendBuilder, spawn, XiNotification};
+use xrl::{Client, ClientError, XiNotification};
 use crate::core::Command;
 
 pub enum CoreEvent {
