@@ -5,9 +5,16 @@
     "sourceMap": true,
     "outDir": "dist",
     "baseUrl": ".",
+    "target": "es6",
     "paths": {
-      "*": ["node_modules/*"]
-    }
+      "*": [
+        "node_modules/*"
+      ]
+    },
+    "lib": [
+      "es2018",
+      "dom"
+    ]
   },
   "include": [
     "src/**/*"

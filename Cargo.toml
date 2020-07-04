@@ -41,3 +41,6 @@ members = [
   "xrl",
   "stadaljs/native"
 ]
+exclude = [
+  "gui/node_modules/stadal/native"
+]
