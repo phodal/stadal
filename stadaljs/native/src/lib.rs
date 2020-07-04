@@ -19,25 +19,28 @@ use xdg::BaseDirectories;
 
 use xrl::spawn;
 use client::core::{Command, Stadui, TuiServiceBuilder};
+use std::thread;
 
-pub fn start(mut cx: FunctionContext) -> JsResult<JsString> {
-    if let Err(ref e) = run() {
-        use std::io::Write;
-        let stderr = &mut ::std::io::stderr();
+pub fn start(mut cx: FunctionContext) -> JsResult<JsUndefined> {
+    thread::spawn(|| {
+        if let Err(ref e) = run() {
+            use std::io::Write;
+            let stderr = &mut ::std::io::stderr();
 
-        writeln!(stderr, "error: {}", e).unwrap();
-        error!("error: {}", e);
+            writeln!(stderr, "error: {}", e).unwrap();
+            error!("error: {}", e);
 
-        writeln!(stderr, "caused by: {}", e.as_fail()).unwrap();
-        error!("error: {}", e);
+            writeln!(stderr, "caused by: {}", e.as_fail()).unwrap();
+            error!("error: {}", e);
 
-        writeln!(stderr, "backtrace: {:?}", e.backtrace()).unwrap();
-        error!("error: {}", e);
+            writeln!(stderr, "backtrace: {:?}", e.backtrace()).unwrap();
+            error!("error: {}", e);
 
-        ::std::process::exit(1);
-    }
+            ::std::process::exit(1);
+        }
+    });
 
-    Ok(cx.string("hello node"))
+    Ok(JsUndefined::new())
 }
 
 fn configure_logs(logfile: &str) {
