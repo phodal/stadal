@@ -100,9 +100,11 @@ export default class Core extends EventEmitter {
         this.emit('new_view', this.proxies[msg.result]);
         return;
       }
-
       // Otherwise respond to other messages.
       switch (msg.method) {
+        case CoreResponse.CONFIG_STATUS: {
+          return;
+        }
         default: {
           console.warn('Unhandled message from core: ', msg);
         }

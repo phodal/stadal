@@ -9,5 +9,5 @@ export enum CoreMethod {
  * An enum of the responses we may receive from xi-core.
  */
 export enum CoreResponse {
-
+  CONFIG_STATUS = 'config_status',
 }
