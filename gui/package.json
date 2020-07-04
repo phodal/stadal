@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "A minimal Electron application written with Typescript",
   "scripts": {
-    "build": "tsc && electron-build-env neon build stadal --release",
+    "build": "tsc",
     "watch": "tsc -w",
     "lint": "tslint -c tslint.json -p tsconfig.json",
     "start": "npm run build && electron ./dist/main.js"
@@ -28,6 +28,6 @@
     "typescript": "^3.9.5"
   },
   "dependencies": {
-    "stadal": "../stadaljs"
+    "execa": "^4.0.2"
   }
 }
