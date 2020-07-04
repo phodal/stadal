@@ -18,7 +18,3 @@ tokio-codec = "0.1.1"
 tokio-process = "0.2.3"
 syntect = { version = "3.2.0", default-features = false }
 
-[lib]
-name = "srl"
-path = "src/lib.rs"
-
