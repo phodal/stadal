@@ -1,84 +1,26 @@
-#[macro_use]
-extern crate log;
-
 use neon::{declare_types, register_module};
 use neon::prelude::*;
 use neon::prelude::*;
 
-use failure::Error;
+extern crate futures;
+#[macro_use]
+extern crate log;
+extern crate log4rs;
 
-pub struct User {
-    id: i32,
-    first_name: String,
-    last_name: String,
-    email: String,
-}
+#[macro_use]
+extern crate serde_json;
 
-declare_types! {
-  pub class JsUser for User {
-    init(mut cx) {
-      let id = cx.argument::<JsNumber>(0)?;
-      let first_name: Handle<JsString> = cx.argument::<JsString>(1)?;
-      let last_name: Handle<JsString> = cx.argument::<JsString>(2)?;
-      let email: Handle<JsString> = cx.argument::<JsString>(3)?;
+use failure::{Error};
+use futures::{future, Future, Stream};
+use log4rs::append::file::FileAppender;
+use log4rs::config::{Appender, Config, Logger, Root};
+use log::LevelFilter;
+use xdg::BaseDirectories;
 
-      Ok(User {
-        id: id.value() as i32,
-        first_name: first_name.value(),
-        last_name: last_name.value(),
-        email: email.value(),
-      })
-    }
+use xrl::spawn;
+use client::core::{Command, Stadui, TuiServiceBuilder};
 
-    method get(mut cx) {
-      let attr: String = cx.argument::<JsString>(0)?.value();
-
-      let this = cx.this();
-
-      match &attr[..] {
-        "id" => {
-          let id = {
-            let guard = cx.lock();
-            let user = this.borrow(&guard);
-            user.id
-          };
-          Ok(cx.number(id).upcast())
-        },
-        "first_name" => {
-          let first_name = {
-            let guard = cx.lock();
-            let user = this.borrow(&guard);
-            user.first_name.clone()
-          };
-          Ok(cx.string(&first_name).upcast())
-        },
-        "last_name" => {
-          let last_name = {
-            let guard = cx.lock();
-            let user = this.borrow(&guard);
-            user.last_name.clone()
-          };
-          Ok(cx.string(&last_name).upcast())
-        },
-        "email" => {
-          let email = {
-            let guard = cx.lock();
-            let user = this.borrow(&guard);
-            user.email.clone()
-          };
-          Ok(cx.string(&email).upcast())
-        },
-        _ => cx.throw_type_error("property does not exist")
-      }
-    }
-
-    method panic(_) {
-      panic!("User.prototype.panic")
-    }
-  }
-}
-
-fn start(mut cx: FunctionContext) -> JsResult<JsString> {
+pub fn start(mut cx: FunctionContext) -> JsResult<JsString> {
     if let Err(ref e) = run() {
         use std::io::Write;
         let stderr = &mut ::std::io::stderr();
@@ -94,16 +36,77 @@ fn start(mut cx: FunctionContext) -> JsResult<JsString> {
 
         ::std::process::exit(1);
     }
+
     Ok(cx.string("hello node"))
 }
 
+fn configure_logs(logfile: &str) {
+    let tui = FileAppender::builder().build(logfile).unwrap();
+    let config = Config::builder()
+        .appender(Appender::builder().build("tui", Box::new(tui)))
+        .logger(
+            Logger::builder()
+                .appender("tui")
+                .additive(false)
+                .build("xi_tui", LevelFilter::Debug),
+        )
+        .logger(
+            Logger::builder()
+                .appender("tui")
+                .additive(false)
+                .build("xrl", LevelFilter::Info),
+        )
+        .build(Root::builder().appender("tui").build(LevelFilter::Info))
+        .unwrap();
+    let _ = log4rs::init_config(config).unwrap();
+}
+
 pub fn run() -> Result<(), Error> {
+    configure_logs("client.log");
+    tokio::run(future::lazy(move || {
+        info!("starting xi-core");
+        let (tui_service_builder, core_events_rx) = TuiServiceBuilder::new();
+        let (client, core_stderr) = spawn(
+            "/Users/fdhuang/repractise/stadaljs/target/debug/stadaljs",
+            tui_service_builder,
+        )
+            .unwrap();
+
+        info!("starting logging xi-core errors");
+        tokio::spawn(
+            core_stderr
+                .for_each(|msg| {
+                    error!("core: {}", msg);
+                    Ok(())
+                })
+                .map_err(|_| ()),
+        );
+
+        tokio::spawn(future::lazy(move || {
+            let conf_dir = BaseDirectories::with_prefix("stadaljs")
+                .ok()
+                .and_then(|dirs| Some(dirs.get_config_home().to_string_lossy().into_owned()));
+
+            let client_clone = client.clone();
+            client
+                .client_started(conf_dir.as_ref().map(|dir| &**dir), None)
+                .map_err(|e| error!("failed to send \"client_started\" {:?}", e))
+                .and_then(move |_| {
+                    info!("initializing the Stadui");
+                    let mut ui = Stadui::new(client_clone, core_events_rx)
+                        .expect("failed to initialize the Stadui");
+                    ui.run_command(Command::SendMemory);
+                    ui.map_err(|e| error!("Stadui exited with an error: {:?}", e))
+                })
+        }));
+        Ok(())
+    }));
+
     Ok(())
 }
 
 register_module!(mut m, {
   m.export_function("start", start);
-  m.export_class::<JsUser>("User");
   Ok(())
 });
 

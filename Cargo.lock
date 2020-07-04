@@ -1739,12 +1739,22 @@ dependencies = [
 name = "stadal-gui"
 version = "0.1.0"
 dependencies = [
+ "clap",
  "client",
  "failure",
+ "futures 0.1.29",
+ "indexmap",
  "log",
  "log4rs",
  "neon",
  "neon-build",
+ "serde",
+ "serde_derive",
+ "serde_json",
+ "termion",
+ "tokio 0.1.22",
+ "xdg",
+ "xrl",
 ]
 
 [[package]]

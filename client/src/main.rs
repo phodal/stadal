@@ -1,10 +1,3 @@
-extern crate futures;
-#[macro_use]
-extern crate log;
-extern crate log4rs;
-#[macro_use]
-extern crate serde_json;
-
 use failure::{Error};
 use futures::{future, Future, Stream};
 use log4rs::append::file::FileAppender;
@@ -15,8 +8,6 @@ use xdg::BaseDirectories;
 use xrl::spawn;
 
 use crate::core::{Command, Stadui, TuiServiceBuilder};
-
-mod core;
 
 fn main() {
     if let Err(ref e) = run() {
