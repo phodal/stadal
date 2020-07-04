@@ -1,3 +1,4 @@
 import * as stadal from 'stadal';
-// const stadal = require('stadal');
+
+(window as any).stadal = stadal;
 console.log(stadal);

@@ -28,6 +28,6 @@
     "typescript": "^3.9.5"
   },
   "dependencies": {
-    "stadal": "^0.1.0"
+    "stadal": "../stadaljs"
   }
 }

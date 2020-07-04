@@ -1017,10 +1017,8 @@ sprintf-js@~1.0.2:
   resolved "https://registry.yarnpkg.com/sprintf-js/-/sprintf-js-1.0.3.tgz#04e6926f662895354f3dd015203633b857297e2c"
   integrity sha1-BOaSb2YolTVPPdAVIDYzuFcpfiw=
 
-stadal@^0.1.0:
+stadal@../stadaljs:
   version "0.1.0"
-  resolved "https://registry.yarnpkg.com/stadal/-/stadal-0.1.0.tgz#7ef595c42146c047bd809a75e9bb83db73d5dba1"
-  integrity sha512-1kiPtow1eE/LJJZwBmWnMf0nJ/BMZn3Kl0g+Sz48rqa/qoZ+xXpXjqH8YnUP8APP1kL5S7BW78UYJCprUCzqmw==
   dependencies:
     neon-cli "^0.4.0"
 

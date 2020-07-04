@@ -16,3 +16,5 @@ neon-build = "0.4.0"
 
 [dependencies]
 neon = "0.4.0"
+client =  { path = "../../client", version = "0.1.0" }
+

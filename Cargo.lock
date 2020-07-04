@@ -1739,6 +1739,7 @@ dependencies = [
 name = "stadal-gui"
 version = "0.1.0"
 dependencies = [
+ "client",
  "neon",
  "neon-build",
 ]
