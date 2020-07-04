@@ -105,6 +105,10 @@ export default class Core extends EventEmitter {
         case CoreResponse.CONFIG_STATUS: {
           return;
         }
+        case CoreResponse.SEND_MEMORY: {
+          console.log(raw);
+          return;
+        }
         default: {
           console.warn('Unhandled message from core: ', msg);
         }

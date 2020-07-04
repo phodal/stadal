@@ -12,6 +12,7 @@ use xi_rpc::{Handler, RemoteError, RpcCtx, RpcPeer};
 
 use crate::infra::notif::CoreNotification;
 use crate::infra::notif::CoreNotification::{ClientStarted, TracingConfig};
+use futures::executor;
 
 pub struct Client(RpcPeer);
 
@@ -42,11 +43,13 @@ impl Client {
     }
 
     pub fn send_memory(&self) {
+        let memory = executor::block_on(get_memory());
         self.0.send_rpc_notification(
             "send_memory",
             &json!({
-                "name": "",
-                "theme": "",
+                "total": &memory.total,
+                "available": &memory.available,
+                "free": &memory.free
             }),
         );
     }

@@ -87,7 +87,6 @@ fn get_logging_directory_path<P: AsRef<Path>>(directory: P) -> Result<PathBuf, i
     }
 }
 
-
 #[tokio::main]
 async fn main() {
     let mut state = Stadal::new();
