@@ -1,4 +1,15 @@
-import * as stadal from 'stadal';
+import * as path from "path";
 
-(window as any).stadal = stadal;
-console.log(stadal);
+let Core = require('./core').default;
+(<any>window).Core = Core;
+
+const opts = {
+    filePath: path.resolve(__dirname, '..', 'xi', 'plugins', 'xi_plugin', 'cache.py'),
+    coreOptions: {
+        env: Object.assign({ RUST_BACKTRACE: 1 }, process.env)
+    },
+    viewOptions: {
+    }
+};
+
+(<any>window).stadal = new Core(opts.coreOptions);
