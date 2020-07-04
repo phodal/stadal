@@ -43,7 +43,7 @@ impl Client {
 
     pub fn send_memory(&self) {
         self.0.send_rpc_notification(
-            "memory",
+            "send_memory",
             &json!({
                 "name": "",
                 "theme": "",
