@@ -37,8 +37,8 @@ pub trait Frontend {
     type NotificationResult: IntoStaticFuture<Item = (), Error = ()>;
     fn handle_notification(&mut self, notification: XiNotification) -> Self::NotificationResult;
 
-    type MeasureWidthResult: IntoStaticFuture<Item = Vec<Vec<f32>>, Error = ()>;
-    fn handle_measure_width(&mut self, request: MeasureWidth) -> Self::MeasureWidthResult;
+    // type MeasureWidthResult: IntoStaticFuture<Item = Vec<Vec<f32>>, Error = ()>;
+    // fn handle_measure_width(&mut self, request: MeasureWidth) -> Self::MeasureWidthResult;
 }
 
 /// A trait to build a type that implements `Frontend`.
@@ -74,29 +74,29 @@ impl<F: Frontend + Send> Service for F {
     fn handle_request(&mut self, method: &str, params: Value) -> Self::RequestFuture {
         info!("<<< request: method={}, params={}", method, &params);
         match method {
-            "measure_width" => {
-                match from_value::<MeasureWidth>(params) {
-                    Ok(request) => {
-                        let future = self
-                            .handle_measure_width(request)
-                            .into_static_future()
-                            .map(|response| {
-                                // TODO: justify why this can't fail
-                                // https://docs.serde.rs/serde_json/value/fn.to_value.html#errors
-                                to_value(response).expect("failed to convert response")
-                            })
-                            .map_err(|_| panic!("errors are not supported"));
-                        Box::new(future)
-                    }
-                    Err(e) => {
-                        warn!("failed to deserialize measure_width message: {:?}", e);
-                        let err_msg = to_value("invalid measure_width message")
-                            // TODO: justify why string serialization cannot fail
-                            .expect("failed to serialize string");
-                        Box::new(future::err(err_msg))
-                    }
-                }
-            }
+            // "measure_width" => {
+            //     match from_value::<MeasureWidth>(params) {
+            //         Ok(request) => {
+            //             let future = self
+            //                 .handle_measure_width(request)
+            //                 .into_static_future()
+            //                 .map(|response| {
+            //                     // TODO: justify why this can't fail
+            //                     // https://docs.serde.rs/serde_json/value/fn.to_value.html#errors
+            //                     to_value(response).expect("failed to convert response")
+            //                 })
+            //                 .map_err(|_| panic!("errors are not supported"));
+            //             Box::new(future)
+            //         }
+            //         Err(e) => {
+            //             warn!("failed to deserialize measure_width message: {:?}", e);
+            //             let err_msg = to_value("invalid measure_width message")
+            //                 // TODO: justify why string serialization cannot fail
+            //                 .expect("failed to serialize string");
+            //             Box::new(future::err(err_msg))
+            //         }
+            //     }
+            // }
             _ => {
                 let err_msg = to_value(format!("unknown method \"{}\"", method))
                     // TODO: justify why string serialization cannot fail
