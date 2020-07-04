@@ -57,7 +57,7 @@ fn configure_logs(logfile: &str) {
     let _ = log4rs::init_config(config).unwrap();
 }
 
-fn run() -> Result<(), Error> {
+pub fn run() -> Result<(), Error> {
     configure_logs("client.log");
     tokio::run(future::lazy(move || {
         info!("starting xi-core");

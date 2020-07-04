@@ -1,6 +1,11 @@
-use neon::prelude::*;
-use neon::prelude::*;
+#[macro_use]
+extern crate log;
+
 use neon::{declare_types, register_module};
+use neon::prelude::*;
+use neon::prelude::*;
+
+use failure::Error;
 
 pub struct User {
     id: i32,
@@ -72,4 +77,33 @@ declare_types! {
     }
   }
 }
-register_module!(mut m, { m.export_class::<JsUser>("User") });
+
+fn start(mut cx: FunctionContext) -> JsResult<JsString> {
+    if let Err(ref e) = run() {
+        use std::io::Write;
+        let stderr = &mut ::std::io::stderr();
+
+        writeln!(stderr, "error: {}", e).unwrap();
+        error!("error: {}", e);
+
+        writeln!(stderr, "caused by: {}", e.as_fail()).unwrap();
+        error!("error: {}", e);
+
+        writeln!(stderr, "backtrace: {:?}", e.backtrace()).unwrap();
+        error!("error: {}", e);
+
+        ::std::process::exit(1);
+    }
+    Ok(cx.string("hello node"))
+}
+
+pub fn run() -> Result<(), Error> {
+    Ok(())
+}
+
+register_module!(mut m, {
+  m.export_function("start", start);
+  m.export_class::<JsUser>("User");
+  Ok(())
+});
+
