@@ -92,14 +92,13 @@ fn run() -> Result<(), Error> {
                 .client_started(conf_dir.as_ref().map(|dir| &**dir), None)
                 .map_err(|e| error!("failed to send \"client_started\" {:?}", e))
                 .and_then(move |_| {
-                    info!("initializing the TUI");
+                    info!("initializing the Stadui");
                     let mut ui = Stadui::new(client_clone, core_events_rx)
                         .expect("failed to initialize the Stadui");
                     ui.run_command(Command::SendMemory);
                     ui.map_err(|e| error!("Stadui exited with an error: {:?}", e))
                 })
         }));
-
         Ok(())
     }));
 

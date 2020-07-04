@@ -82,6 +82,7 @@ impl Future for Stadui {
     type Error = io::Error;
 
     fn poll(&mut self) -> Poll<Self::Item, Self::Error> {
+        debug!("polling the TUI");
         self.poll_rpc();
         if self.exit {
             info!("exiting the TUI");
