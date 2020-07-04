@@ -1,6 +1,5 @@
 use neon::{declare_types, register_module};
-use neon::prelude::*;
-use neon::prelude::*;
+use neon::prelude::{Task, FunctionContext, JsResult, JsUndefined, JsFunction, JsNumber, Context, JsString};
 
 extern crate futures;
 #[macro_use]
@@ -20,27 +19,46 @@ use xdg::BaseDirectories;
 use xrl::spawn;
 use client::core::{Command, Stadui, TuiServiceBuilder};
 use std::thread;
+use neon::context::TaskContext;
 
 pub fn start(mut cx: FunctionContext) -> JsResult<JsUndefined> {
-    thread::spawn(|| {
-        if let Err(ref e) = run() {
-            use std::io::Write;
-            let stderr = &mut ::std::io::stderr();
-
-            writeln!(stderr, "error: {}", e).unwrap();
-            error!("error: {}", e);
-
-            writeln!(stderr, "caused by: {}", e.as_fail()).unwrap();
-            error!("error: {}", e);
-
-            writeln!(stderr, "backtrace: {:?}", e.backtrace()).unwrap();
-            error!("error: {}", e);
-
-            ::std::process::exit(1);
-        }
-    });
-
+    let f = cx.argument::<JsFunction>(0)?;
+    BackgroundTask.schedule(f);
     Ok(JsUndefined::new())
+}
+
+struct BackgroundTask;
+
+impl Task for BackgroundTask {
+    type Output = String;
+    type Error = String;
+    type JsEvent = JsString;
+
+    fn perform(&self) -> Result<Self::Output, Self::Error> {
+        thread::spawn(|| {
+            if let Err(ref e) = run() {
+                use std::io::Write;
+                let stderr = &mut ::std::io::stderr();
+
+                writeln!(stderr, "error: {}", e).unwrap();
+                error!("error: {}", e);
+
+                writeln!(stderr, "caused by: {}", e.as_fail()).unwrap();
+                error!("error: {}", e);
+
+                writeln!(stderr, "backtrace: {:?}", e.backtrace()).unwrap();
+                error!("error: {}", e);
+
+                ::std::process::exit(1);
+            }
+        });
+
+        Ok(String::from("hello"))
+    }
+
+    fn complete(self, mut cx: TaskContext, result: Result<String, String>) -> JsResult<JsString> {
+        Ok(cx.string(result.unwrap()))
+    }
 }
 
 fn configure_logs(logfile: &str) {
