@@ -5,7 +5,7 @@
 ## Architecture (design)
 
  - RPC Server, (Using Rust) for read system status.
- - RPC Client, (Using Rust to Node.js) for communication.
+ - ~~RPC Client, (Using Rust to Node.js) for communication~~.
  - UI Client, (Using Electron) for cross platform UI support.
 
 Node.js
@@ -41,6 +41,17 @@ requests
 {"method":"client_started","params":{}}
 {"method":"send_memory","params":{}}
 ```
+
+
+## Development
+ - core-lib, Stadal Core
+ - gui, Electron UI
+ - rpc, Stadal Core RPC
+ - src, Stadal App
+ - client, **deprecated**  for Rust RPC Client
+ - stadaljs, **deprecated** for Rust PRC Client Node.js Binding
+ - xrl, **deprecated** for Rust RPC Client
+ - trace, for Rust RPC Server
 
 LICENSE
 ===
