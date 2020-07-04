@@ -12,6 +12,7 @@ use xi_rpc::{Handler, RemoteError, RpcCtx, RpcPeer};
 
 use crate::infra::notif::CoreNotification;
 use crate::infra::notif::CoreNotification::{ClientStarted, TracingConfig};
+use core::fmt;
 
 pub struct Client(RpcPeer);
 
@@ -60,6 +61,12 @@ pub enum CoreRequest {
     DebugGetContents {},
 }
 
+impl fmt::Display for CoreRequest {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        write!(f, "{:?}", self)
+    }
+}
+
 #[allow(dead_code)]
 pub struct CoreState {
     peer: Client,
@@ -88,6 +95,7 @@ impl CoreState {
 
     pub(crate) fn client_request(&mut self, cmd: CoreRequest) -> Result<Value, RemoteError> {
         use self::CoreRequest::*;
+        info!("client request: {}", cmd);
         match cmd {
             GetConfig {} => Ok(json!(1)),
             DebugGetContents {} => Ok(json!(1)),
