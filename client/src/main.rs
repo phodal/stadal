@@ -1,23 +1,23 @@
 #[macro_use]
 extern crate log;
-extern crate log4rs;
 extern crate futures;
+extern crate log4rs;
 
 use failure::{AsFail, Error, Fail};
-use futures::{Async, future, Future, Poll, Sink, Stream};
 use futures::sync::mpsc::{unbounded, UnboundedReceiver, UnboundedSender};
 use futures::sync::oneshot::{self, Receiver, Sender};
+use futures::{future, Async, Future, Poll, Sink, Stream};
 
-use xrl::{Client, Frontend, FrontendBuilder, spawn, XiNotification};
-use xdg::BaseDirectories;
+use log::LevelFilter;
 use log4rs::append::file::FileAppender;
 use log4rs::config::{Appender, Config, Logger, Root};
-use log::LevelFilter;
+use xdg::BaseDirectories;
+use xrl::{spawn, Client, Frontend, FrontendBuilder, XiNotification};
 
 pub struct TuiService(UnboundedSender<CoreEvent>);
 
 impl Frontend for TuiService {
-    type NotificationResult =  Result<(), ()>;
+    type NotificationResult = Result<(), ()>;
 
     fn handle_notification(&mut self, notification: XiNotification) -> Self::NotificationResult {
         self.0.start_send(CoreEvent::Notify(notification)).unwrap();
@@ -55,7 +55,6 @@ impl FrontendBuilder for TuiServiceBuilder {
         TuiService(self.0)
     }
 }
-
 
 fn main() {
     if let Err(ref e) = run() {
@@ -96,7 +95,6 @@ fn configure_logs(logfile: &str) {
     let _ = log4rs::init_config(config).unwrap();
 }
 
-
 fn run() -> Result<(), Error> {
     configure_logs("client.log");
     tokio::run(future::lazy(move || {
@@ -105,7 +103,8 @@ fn run() -> Result<(), Error> {
         let (client, core_stderr) = spawn(
             "/Users/fdhuang/repractise/stadal/target/debug/stadal",
             tui_service_builder,
-        ).unwrap();
+        )
+        .unwrap();
 
         info!("starting logging xi-core errors");
         tokio::spawn(

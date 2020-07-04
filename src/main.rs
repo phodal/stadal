@@ -1,8 +1,8 @@
-use std::{io, process};
 use std::path::{Path, PathBuf};
+use std::{io, process};
 
 use futures::executor::block_on;
-use heim::{memory, Result, units::information};
+use heim::{memory, units::information, Result};
 use log::{error, info};
 
 use core_lib::app::Stadal;
