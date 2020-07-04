@@ -72,7 +72,7 @@ pub fn run() -> Result<(), Error> {
         );
 
         tokio::spawn(future::lazy(move || {
-            let conf_dir = BaseDirectories::with_prefix("stadaljs")
+            let conf_dir = BaseDirectories::with_prefix("stadal")
                 .ok()
                 .and_then(|dirs| Some(dirs.get_config_home().to_string_lossy().into_owned()));
 

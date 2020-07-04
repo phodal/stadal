@@ -67,7 +67,7 @@ pub fn run() -> Result<(), Error> {
         info!("starting xi-core");
         let (tui_service_builder, core_events_rx) = TuiServiceBuilder::new();
         let (client, core_stderr) = spawn(
-            "/Users/fdhuang/repractise/stadaljs/target/debug/stadaljs",
+            "/Users/fdhuang/repractise/stadal/target/debug/stadal",
             tui_service_builder,
         )
             .unwrap();
@@ -83,7 +83,7 @@ pub fn run() -> Result<(), Error> {
         );
 
         tokio::spawn(future::lazy(move || {
-            let conf_dir = BaseDirectories::with_prefix("stadaljs")
+            let conf_dir = BaseDirectories::with_prefix("stadal")
                 .ok()
                 .and_then(|dirs| Some(dirs.get_config_home().to_string_lossy().into_owned()));
 
