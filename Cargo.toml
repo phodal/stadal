@@ -29,10 +29,14 @@ path = "rpc"
 [dependencies.xi-trace]
 path = "trace"
 
+[dependencies.xrl]
+path = "xrl"
+
 [workspace]
 members = [
   "rpc",
   "trace",
   "client",
-  "core-lib"
+  "core-lib",
+  "xrl"
 ]

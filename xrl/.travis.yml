@@ -1,0 +1,18 @@
+language: rust
+rust:
+  - stable
+  - beta
+  - nightly
+matrix:
+  allow_failures:
+    - rust: nightly
+cache: cargo
+before_script:
+  - rustup component add clippy
+  - rustup component add rustfmt
+script:
+  # Required for tests. Install only if not present already
+  - bash -c 'which xi-core || cargo install --git https://github.com/xi-editor/xi-editor xi-core'
+  - cargo clippy
+  - cargo fmt -- --check
+  - cargo test
