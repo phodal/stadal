@@ -16,49 +16,11 @@ use log4rs::config::{Appender, Config, Logger, Root};
 use log::LevelFilter;
 use xdg::BaseDirectories;
 
-use xrl::{Client, ClientError, Frontend, FrontendBuilder, spawn, XiNotification};
+use xrl::{Client, ClientError, FrontendBuilder, spawn, XiNotification};
 
-use crate::core::{CoreEvent, Stadui, Command};
+use crate::core::{Command, CoreEvent, Stadui, TuiServiceBuilder};
 
 mod core;
-
-pub struct TuiService(UnboundedSender<CoreEvent>);
-
-impl Frontend for TuiService {
-    type NotificationResult = Result<(), ()>;
-
-    fn handle_notification(&mut self, notification: XiNotification) -> Self::NotificationResult {
-        self.0.start_send(CoreEvent::Notify(notification)).unwrap();
-        self.0.poll_complete().unwrap();
-        Ok(())
-    }
-}
-
-pub struct NoErrorReceiver<T>(Receiver<T>);
-
-impl<T> Future for NoErrorReceiver<T> {
-    type Item = T;
-    type Error = ();
-    fn poll(&mut self) -> Poll<Self::Item, Self::Error> {
-        self.0.poll().map_err(|_cancelled| ())
-    }
-}
-
-pub struct TuiServiceBuilder(UnboundedSender<CoreEvent>);
-
-impl TuiServiceBuilder {
-    pub fn new() -> (Self, UnboundedReceiver<CoreEvent>) {
-        let (tx, rx) = unbounded();
-        (TuiServiceBuilder(tx), rx)
-    }
-}
-
-impl FrontendBuilder for TuiServiceBuilder {
-    type Frontend = TuiService;
-    fn build(self, _client: Client) -> Self::Frontend {
-        TuiService(self.0)
-    }
-}
 
 fn main() {
     if let Err(ref e) = run() {
