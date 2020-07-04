@@ -1,11 +1,9 @@
-#[macro_use]
-extern crate serde_json;
-
 extern crate futures;
 #[macro_use]
 extern crate log;
 extern crate log4rs;
-
+#[macro_use]
+extern crate serde_json;
 
 use std::io;
 
@@ -19,6 +17,10 @@ use log::LevelFilter;
 use xdg::BaseDirectories;
 
 use xrl::{Client, ClientError, Frontend, FrontendBuilder, spawn, XiNotification};
+
+use crate::core::{CoreEvent, Stadui, Command};
+
+mod core;
 
 pub struct TuiService(UnboundedSender<CoreEvent>);
 
@@ -40,10 +42,6 @@ impl<T> Future for NoErrorReceiver<T> {
     fn poll(&mut self) -> Poll<Self::Item, Self::Error> {
         self.0.poll().map_err(|_cancelled| ())
     }
-}
-
-pub enum CoreEvent {
-    Notify(XiNotification),
 }
 
 pub struct TuiServiceBuilder(UnboundedSender<CoreEvent>);
@@ -101,88 +99,6 @@ fn configure_logs(logfile: &str) {
     let _ = log4rs::init_config(config).unwrap();
 }
 
-pub struct Stadui {
-    client: Client,
-    exit: bool,
-    core_events: UnboundedReceiver<CoreEvent>,
-}
-
-impl Stadui {
-    /// Create a new Tui instance.
-    pub fn new(client: Client, events: UnboundedReceiver<CoreEvent>) -> Result<Self, Error> {
-        Ok(Stadui {
-            exit: false,
-            client,
-            core_events: events,
-        })
-    }
-
-    fn handle_core_event(&mut self, event: CoreEvent) {
-        match event {
-            CoreEvent::Notify(notification) => match notification {
-                _ => info!("ignoring Xi core notification: {:?}", notification),
-            }
-        };
-    }
-
-    pub fn run_command(&mut self, cmd: Command) {
-        match cmd {
-            Command::SendMemory => {
-                tokio::spawn(self.send_memory().map_err(|_| ()));
-            }
-        }
-    }
-
-    fn send_memory(&mut self) -> impl Future<Item = (), Error = ClientError> {
-        let params = json!("");
-        self.client.notify("send_memory", params).and_then(|_| Ok(()))
-    }
-
-    fn poll_rpc(&mut self) {
-        debug!("polling for RPC messages");
-        loop {
-            match self.core_events.poll() {
-                Ok(Async::Ready(Some(event))) => self.handle_core_event(event),
-                Ok(Async::Ready(None)) => {
-                    info!("The RPC endpoint exited normally. Shutting down the TUI");
-                    self.exit = true;
-                    return;
-                }
-                Ok(Async::NotReady) => {
-                    debug!("no more RPC event, done polling");
-                    return;
-                }
-                Err(e) => {
-                    error!("The RPC endpoint exited with an error: {:?}", e);
-                    error!("Shutting down the TUI");
-                    self.exit = true;
-                    return;
-                }
-            }
-        }
-    }
-}
-
-impl Future for Stadui {
-    type Item = ();
-    type Error = io::Error;
-
-    fn poll(&mut self) -> Poll<Self::Item, Self::Error> {
-        self.poll_rpc();
-        if self.exit {
-            info!("exiting the TUI");
-            return Ok(Async::Ready(()));
-        }
-        Ok(Async::NotReady)
-    }
-}
-
-
-#[derive(Debug)]
-pub enum Command {
-    SendMemory,
-}
-
 fn run() -> Result<(), Error> {
     configure_logs("client.log");
     tokio::run(future::lazy(move || {
@@ -216,9 +132,9 @@ fn run() -> Result<(), Error> {
                 .and_then(move |_| {
                     info!("initializing the TUI");
                     let mut ui = Stadui::new(client_clone, core_events_rx)
-                        .expect("failed to initialize the TUI");
+                        .expect("failed to initialize the Stadui");
                     ui.run_command(Command::SendMemory);
-                    ui.map_err(|e| error!("TUI exited with an error: {:?}", e))
+                    ui.map_err(|e| error!("Stadui exited with an error: {:?}", e))
                 })
         }));
 
