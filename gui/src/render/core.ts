@@ -103,29 +103,6 @@ export default class Core extends EventEmitter {
 
       // Otherwise respond to other messages.
       switch (msg.method) {
-        case CoreResponse.AVAILABLE_THEMES: {
-          // TODO: set/save theme + move logic elsewhere
-          this.send(CoreMethod.SET_THEME, { theme_name: 'base16-eighties.dark' });
-          return;
-        }
-        case CoreResponse.AVAILABLE_PLUGINS:
-        case CoreResponse.CONFIG_CHANGED:
-        case CoreResponse.PLUGIN_STARTED:
-        case CoreResponse.THEME_CHANGED: {
-          // TODO: respond to these
-          // TODO: get python plugins working
-          // console.log(msg);
-          return;
-        }
-        case CoreResponse.DEF_STYLE: {
-          return;
-        }
-        // Commands proxied through to Views.
-        case CoreResponse.SCROLL_TO:
-        case CoreResponse.UPDATE: {
-          this.proxies[msg.params.view_id].emit(msg.method, msg.params);
-          return;
-        }
         default: {
           console.warn('Unhandled message from core: ', msg);
         }
