@@ -94,7 +94,9 @@ impl CoreState {
         }
     }
 
-    pub(crate) fn finish_setup(&mut self, self_ref: WeakStadalCore) {}
+    pub(crate) fn finish_setup(&mut self, self_ref: WeakStadalCore) {
+        self.peer.0.send_rpc_notification("config", &json!({ "success": true }))
+    }
 
     pub(crate) fn handle_idle(&mut self, token: usize) {
         match token {
