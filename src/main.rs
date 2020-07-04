@@ -1,8 +1,8 @@
-use std::path::{Path, PathBuf};
 use std::{io, process};
+use std::path::{Path, PathBuf};
 
 use futures::executor::block_on;
-use heim::{memory, units::information, Result};
+use heim::{memory, Result, units::information};
 use log::{error, info};
 
 use core_lib::app::Stadal;
@@ -61,25 +61,4 @@ async fn main() {
             process::exit(1);
         }
     }
-}
-
-async fn print_memory() {
-    let memory = memory::memory().await.unwrap();
-    let swap = memory::swap().await.unwrap();
-
-    println!("              total        free   available");
-    println!(
-        "{:>7} {:>11?} {:>11?} {:>11?}",
-        "Mem:",
-        memory.total().get::<information::megabyte>(),
-        memory.free().get::<information::megabyte>(),
-        memory.available().get::<information::megabyte>(),
-    );
-    println!(
-        "{:>7} {:>11?} {:>11?} {:>11?}",
-        "Swap:",
-        swap.total().get::<information::megabyte>(),
-        swap.used().get::<information::megabyte>(),
-        swap.free().get::<information::megabyte>(),
-    );
 }
