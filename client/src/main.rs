@@ -1,13 +1,15 @@
-use failure::{Error};
+#[macro_use]
+extern crate log;
+
+use failure::Error;
 use futures::{future, Future, Stream};
 use log4rs::append::file::FileAppender;
 use log4rs::config::{Appender, Config, Logger, Root};
 use log::LevelFilter;
 use xdg::BaseDirectories;
 
+use client::core::{Command, Stadui, TuiServiceBuilder};
 use xrl::spawn;
-
-use crate::core::{Command, Stadui, TuiServiceBuilder};
 
 fn main() {
     if let Err(ref e) = run() {
@@ -54,7 +56,7 @@ pub fn run() -> Result<(), Error> {
         info!("starting xi-core");
         let (tui_service_builder, core_events_rx) = TuiServiceBuilder::new();
         let (client, core_stderr) = spawn(
-            "/Users/fdhuang/repractise/stadaljs/target/debug/stadaljs",
+            "/Users/fdhuang/repractise/stadal/target/debug/stadal",
             tui_service_builder,
         )
             .unwrap();
