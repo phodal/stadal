@@ -1,12 +1,15 @@
 import { app, BrowserWindow } from "electron";
 import * as path from "path";
 
+app.allowRendererProcessReuse = false;
+
 function createWindow() {
   // Create the browser window.
   const mainWindow = new BrowserWindow({
     height: 600,
     webPreferences: {
       preload: path.join(__dirname, "preload.js"),
+      nodeIntegration: true
     },
     width: 800,
   });
