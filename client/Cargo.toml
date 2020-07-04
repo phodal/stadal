@@ -20,5 +20,5 @@ syntect = { version = "3.2.0", default-features = false }
 
 [lib]
 name = "srl"
-path = "src/srl/lib.rs"
+path = "src/lib.rs"
 
