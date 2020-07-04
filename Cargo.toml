@@ -39,5 +39,5 @@ members = [
   "client",
   "core-lib",
   "xrl",
-  "stadal-gui/native"
+  "stadaljs/native"
 ]

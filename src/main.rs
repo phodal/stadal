@@ -95,8 +95,8 @@ async fn main() {
     let stdout = io::stdout();
     let mut rpc_looper = RpcLoop::new(stdout);
 
-    let mut directory_path = get_logging_directory_path(PathBuf::from("stadal")).unwrap();
-    directory_path.push(PathBuf::from("stadal.log"));
+    let mut directory_path = get_logging_directory_path(PathBuf::from("stadaljs")).unwrap();
+    directory_path.push(PathBuf::from("stadaljs.log"));
 
     if let Err(e) = setup_logging(Some(directory_path.as_path())) {
         eprintln!("[ERROR] setup_logging returned error, logging not enabled: {:?}", e);
