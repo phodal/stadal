@@ -29,18 +29,15 @@ path = "rpc"
 [dependencies.xi-trace]
 path = "trace"
 
-[dependencies.xrl]
-path = "xrl"
-
 [workspace]
 members = [
   "rpc",
   "trace",
-  "client",
-  "core-lib",
-  "xrl",
-  "stadaljs/native"
+  "core-lib"
 ]
 exclude = [
-  "gui/node_modules/stadal/native"
+  "gui/node_modules/stadal/native",
+  "client",
+  "stadaljs/native",
+  "xrl"
 ]
