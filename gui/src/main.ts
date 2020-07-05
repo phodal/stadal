@@ -59,8 +59,7 @@ const getWindowPosition = () => {
 }
 
 const createTray = () => {
-  let image_path = path.join(assetsDirectory, 'sunTemplate.png');
-  console.log(image_path);
+  let image_path = path.join(assetsDirectory, 'images/sunTemplate.png');
   tray = new Tray(nativeImage.createFromPath(image_path))
   tray.setToolTip('Phodit')
 
