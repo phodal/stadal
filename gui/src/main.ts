@@ -11,7 +11,7 @@ let win: BrowserWindow = undefined
 function createWindow() {
   win = new BrowserWindow({
     width: 300,
-    height: 450,
+    height: 250,
     frame: false,
     show: false,
     fullscreenable: false,
