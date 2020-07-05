@@ -1,24 +1,40 @@
-import { app, BrowserWindow } from "electron";
+import {app, BrowserWindow, ipcMain, nativeImage, NativeImage, Tray} from "electron";
 import * as path from "path";
 
 app.allowRendererProcessReuse = false;
 
+const assetsDirectory = path.join(__dirname, '../assets')
+
+let tray: Tray = undefined
+let win: BrowserWindow = undefined
+
 function createWindow() {
-  const mainWindow = new BrowserWindow({
-    height: 600,
+  win = new BrowserWindow({
+    width: 300,
+    height: 450,
     frame: false,
+    show: false,
+    fullscreenable: false,
+    resizable: false,
+    transparent: true,
     webPreferences: {
+      backgroundThrottling: false,
       preload: path.join(__dirname, "preload.js"),
       nodeIntegration: true
     },
-    width: 800,
   });
 
-  mainWindow.loadFile(path.join(__dirname, "../index.html"));
-  mainWindow.webContents.openDevTools();
+  win.loadFile(path.join(__dirname, "../index.html"));
+  win.on('blur', () => {
+    if (!win.webContents.isDevToolsOpened()) {
+      win.hide()
+    }
+  })
 }
 
+app.dock.hide();
 app.on("ready", () => {
+  createTray();
   createWindow();
 
   app.on("activate", function () {
@@ -31,3 +47,54 @@ app.on("window-all-closed", () => {
     app.quit();
   }
 });
+
+const getWindowPosition = () => {
+  const windowBounds = win.getBounds()
+  const trayBounds = tray.getBounds()
+
+  const x = Math.round(trayBounds.x + (trayBounds.width / 2) - (windowBounds.width / 2))
+  const y = Math.round(trayBounds.y + trayBounds.height + 4)
+
+  return {x: x, y: y}
+}
+
+const createTray = () => {
+  let image_path = path.join(assetsDirectory, 'sunTemplate.png');
+  console.log(image_path);
+  tray = new Tray(nativeImage.createFromPath(image_path))
+  tray.setToolTip('Phodit')
+
+  tray.on('right-click', toggleWindow)
+  tray.on('double-click', toggleWindow)
+  tray.on('click', function (event) {
+    toggleWindow()
+
+    if (win.isVisible() && process.defaultApp && event.metaKey) {
+      win.webContents.openDevTools();
+    }
+  })
+}
+
+const toggleWindow = () => {
+  if (win.isVisible()) {
+    win.hide()
+  } else {
+    showWindow()
+  }
+}
+
+const showWindow = () => {
+  const position = getWindowPosition()
+  win.setPosition(position.x, position.y, false)
+  win.show()
+  win.focus()
+}
+
+ipcMain.on('show-window', () => {
+  showWindow()
+})
+
+ipcMain.on('weather-updated', (event, weather) => {
+  tray.setTitle("title")
+  tray.setToolTip(`time`)
+})

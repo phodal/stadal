@@ -20,6 +20,7 @@ RPC
 Refs:
 
  - [Xi Editor](https://github.com/xi-editor/xi-editor) project is an attempt to build a high quality text editor, using modern software engineering techniques. 
+  - [Tray Electrorn](https://github.com/kevinsawicki/tray-example)  An example app for building a native-looking Mac OS X tray app with a popover using Electron.
 
 ## Documents
 
