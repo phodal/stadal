@@ -17,6 +17,7 @@ function createWindow() {
     fullscreenable: false,
     resizable: false,
     transparent: true,
+    backgroundColor: '#fff',
     webPreferences: {
       backgroundThrottling: false,
       preload: path.join(__dirname, "preload.js"),
@@ -28,6 +29,7 @@ function createWindow() {
   win.on('blur', () => {
     if (!win.webContents.isDevToolsOpened()) {
       win.hide()
+      win.webContents.send('window.blur')
     }
   })
 }
@@ -77,8 +79,10 @@ const createTray = () => {
 const toggleWindow = () => {
   if (win.isVisible()) {
     win.hide()
+    win.webContents.send('window.blur')
   } else {
     showWindow()
+    win.webContents.send('window.focus')
   }
 }
 
