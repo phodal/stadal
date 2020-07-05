@@ -2,7 +2,6 @@ use std::path::PathBuf;
 use std::sync::{Arc, Mutex, MutexGuard, Weak};
 
 use futures::executor::block_on;
-use heim::{memory, units::information};
 use log::{error, info, warn};
 use serde::de::{self, Deserialize, Deserializer};
 use serde::ser::{self, Serialize, Serializer};
@@ -13,29 +12,9 @@ use xi_rpc::{Handler, RemoteError, RpcCtx, RpcPeer};
 use crate::infra::notif::CoreNotification;
 use crate::infra::notif::CoreNotification::{ClientStarted, TracingConfig};
 use futures::executor;
+use crate::infra::memory::get_memory;
 
 pub struct Client(RpcPeer);
-
-#[derive(Clone, Debug, Default, Serialize, Deserialize)]
-pub struct StadalMemory {
-    total: String,
-    free: String,
-    available: String,
-}
-
-async fn get_memory() -> StadalMemory {
-    let memory = memory::memory().await.unwrap();
-
-    let total = memory.total().get::<information::megabyte>();
-    let free = memory.free().get::<information::megabyte>();
-    let available = memory.available().get::<information::megabyte>();
-
-    StadalMemory {
-        total: total.to_string(),
-        free: free.to_string(),
-        available: available.to_string(),
-    }
-}
 
 impl Client {
     pub fn new(peer: RpcPeer) -> Self {
