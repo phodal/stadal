@@ -1,4 +1,4 @@
-import {app, BrowserWindow, ipcMain, nativeImage, NativeImage, Tray} from "electron";
+import {app, BrowserWindow, ipcMain, Menu, nativeImage, NativeImage, Tray} from "electron";
 import * as path from "path";
 
 app.allowRendererProcessReuse = false;
@@ -63,7 +63,13 @@ const getWindowPosition = () => {
 const createTray = () => {
   let image_path = path.join(assetsDirectory, 'images/sunTemplate.png');
   tray = new Tray(nativeImage.createFromPath(image_path))
-  tray.setToolTip('Phodit')
+  tray.setToolTip('Stadal')
+  const contextMenu = Menu.buildFromTemplate([
+    { label: "Exit", type: "normal",  click() {
+        app.quit()
+      }}
+  ])
+  tray.setContextMenu(contextMenu);
 
   tray.on('right-click', toggleWindow)
   tray.on('double-click', toggleWindow)
