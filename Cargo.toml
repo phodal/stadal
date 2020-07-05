@@ -35,9 +35,3 @@ members = [
   "trace",
   "core-lib"
 ]
-exclude = [
-  "gui/node_modules/stadal/native",
-  "client",
-  "stadaljs/native",
-  "xrl"
-]

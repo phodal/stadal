@@ -1,3 +1,0 @@
-# stadal-gui
-
-
