@@ -25,7 +25,7 @@ function createWindow() {
     },
   });
 
-  win.loadFile(path.join(__dirname, "../index.html"));
+  win.loadFile(path.join(__dirname, "../views/index.html"));
   win.on('blur', () => {
     if (!win.webContents.isDevToolsOpened()) {
       win.hide()
@@ -101,9 +101,4 @@ const showWindow = () => {
 
 ipcMain.on('show-window', () => {
   showWindow()
-})
-
-ipcMain.on('weather-updated', (event, weather) => {
-  tray.setTitle("title")
-  tray.setToolTip(`time`)
 })
