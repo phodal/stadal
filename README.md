@@ -20,7 +20,12 @@ RPC
 Refs:
 
  - [Xi Editor](https://github.com/xi-editor/xi-editor) project is an attempt to build a high quality text editor, using modern software engineering techniques. 
-  - [Tray Electrorn](https://github.com/kevinsawicki/tray-example)  An example app for building a native-looking Mac OS X tray app with a popover using Electron.
+ - [Tray Electrorn](https://github.com/kevinsawicki/tray-example)  An example app for building a native-looking Mac OS X tray app with a popover using Electron.
+
+Stats Demo App:
+
+ - [bottom](https://github.com/ClementTsang/bottom) A cross-platform graphical process/system monitor with a customizable interface and a multitude of features. Supports Linux, macOS, and Windows. Inspired by both gtop and gotop.
+ - [Zenith](https://github.com/bvaisvil/zenith) In terminal graphical metrics for your *nix system written in Rust.
 
 ## Documents
 
