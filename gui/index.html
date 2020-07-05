@@ -1,23 +1,38 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
+<head>
+    <meta charset="UTF-8"/>
     <title>Hello World!</title>
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-<!--    <meta-->
-<!--      http-equiv="Content-Security-Policy"-->
-<!--      content="default-src 'self'; script-src 'self'"-->
-<!--    />-->
-<!--    <meta-->
-<!--      http-equiv="X-Content-Security-Policy"-->
-<!--      content="default-src 'self'; script-src 'self'"-->
-<!--    />-->
+    <!--    <meta-->
+    <!--      http-equiv="Content-Security-Policy"-->
+    <!--      content="default-src 'self'; script-src 'self'"-->
+    <!--    />-->
+    <!--    <meta-->
+    <!--      http-equiv="X-Content-Security-Policy"-->
+    <!--      content="default-src 'self'; script-src 'self'"-->
+    <!--    />-->
     <link rel="stylesheet" href="./assets/css/index.css">
-  </head>
-  <body>
-  <div id="memory"></div>
-    <script>
-      require('./dist/render/renderer.js')
-    </script>
-  </body>
+</head>
+<body>
+<div id="memory">
+    <h2>Memory</h2>
+    <div class="memory-content">
+      <div>
+        <span class="title">Total</span>
+        <span class="value" id="mem-total"></span>
+      </div>
+      <div>
+        <span class="title">Available</span>
+        <span class="value" id="mem-available"></span></div>
+      <div>
+        <span class="title">Free</span>
+        <span class="value" id="mem-free"></span>
+      </div>
+    </div>
+</div>
+<script>
+    require('./dist/render/renderer.js')
+</script>
+</body>
 </html>

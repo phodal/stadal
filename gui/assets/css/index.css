@@ -5,3 +5,9 @@
     --window-border-radius: 6px;
     --font-size: 14px;
 }
+
+.memory-content {
+    border: solid 1px #000;
+    display: flex;
+    justify-content: space-between;
+}

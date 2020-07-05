@@ -17,4 +17,4 @@ const opts = {
 
 setInterval(() => {
     (<any>window).stadal.send("send_memory")
-}, 5000);
+}, 1000);
