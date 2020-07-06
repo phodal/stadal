@@ -11,7 +11,7 @@ use crate::infra::notif::CoreNotification;
 use crate::infra::notif::CoreNotification::{ClientStarted, TracingConfig};
 use futures::executor;
 use crate::infra::memory::get_memory;
-use crate::infra::{get_host, get_languages};
+use crate::infra::{get_host, get_languages, get_clean_size};
 
 pub struct Client(RpcPeer);
 
@@ -43,6 +43,14 @@ impl Client {
         );
     }
 
+    pub fn send_sizes(&self) {
+        let sizes = get_clean_size();
+        self.0.send_rpc_notification(
+            "send_sizes",
+            &json!(&sizes),
+        );
+    }
+
     pub fn send_memory(&self) {
         let memory = executor::block_on(get_memory());
         self.0.send_rpc_notification(
@@ -61,7 +69,6 @@ impl Client {
 #[serde(tag = "method", content = "params")]
 pub enum CoreRequest {
     GetConfig {},
-    DebugGetContents {},
 }
 
 #[allow(dead_code)]
@@ -88,6 +95,9 @@ impl CoreState {
             SendLanguages {} => {
                 self.peer.send_languages();
             }
+            SendSizes {} => {
+                self.peer.send_sizes();
+            }
             ClientStarted { .. } => (),
             _ => {
                 // self.not_command(view_id, language_id);
@@ -99,7 +109,6 @@ impl CoreState {
         use self::CoreRequest::*;
         match cmd {
             GetConfig {} => Ok(json!(1)),
-            DebugGetContents {} => Ok(json!(1)),
         }
     }
 

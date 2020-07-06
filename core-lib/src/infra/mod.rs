@@ -1,5 +1,5 @@
 mod cleaner;
-
+pub use cleaner::{get_clean_size, CleanSize};
 
 mod lang;
 pub use lang::{get_languages, Lang};
