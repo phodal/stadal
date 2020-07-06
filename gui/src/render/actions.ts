@@ -25,6 +25,7 @@ interface Language {
 interface CleanSize {
   name: string,
   size: string,
+  path: string,
 }
 
 @injectable()
@@ -50,6 +51,10 @@ export default class Actions {
   }
 
   display_sizes(data: CleanSize[]) {
-    console.log(data);
+    let result = "";
+    for (let datum of data) {
+      result += `${capitalizeFirstLetter(datum.name)} : ${niceBytes(datum.size)} , ${datum.path}<br>`
+    }
+    document.getElementById("sizes").innerHTML = result;
   }
 }
