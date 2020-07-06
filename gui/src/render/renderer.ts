@@ -28,7 +28,6 @@ function startGetMemory() {
   })
 
   ipcRenderer.on('window.blur', (event, arg) => {
-    document.getElementById("info").innerText = "window.blur";
     clearInterval(memoryInterval);
     memoryInterval = null;
   })

@@ -70,12 +70,9 @@ const createTray = () => {
       }
     }
   ])
+  tray.setContextMenu(contextMenu);
 
-  tray.on('right-click', function () {
-    tray.setContextMenu(contextMenu);
-  })
   tray.on('mouse-enter', function (event) {
-    tray.setContextMenu(null);
     toggleWindow()
 
     if (win.isVisible() && process.defaultApp && event.metaKey) {
