@@ -1,8 +1,6 @@
-use std::path::PathBuf;
 use std::sync::{Arc, Mutex, MutexGuard, Weak};
 
-use futures::executor::block_on;
-use log::{error, info, warn};
+use log::{info};
 use serde::de::{self, Deserialize, Deserializer};
 use serde::ser::{self, Serialize, Serializer};
 use serde_json::{self, Value};
@@ -13,7 +11,7 @@ use crate::infra::notif::CoreNotification;
 use crate::infra::notif::CoreNotification::{ClientStarted, TracingConfig};
 use futures::executor;
 use crate::infra::memory::get_memory;
-use crate::infra::get_host;
+use crate::infra::{get_host, get_languages};
 
 pub struct Client(RpcPeer);
 
@@ -34,6 +32,14 @@ impl Client {
                 "arch": &host.arch,
                 "uptime": &host.uptime
             }),
+        );
+    }
+
+    pub fn send_languages(&self) {
+        let langs = get_languages();
+        self.0.send_rpc_notification(
+            "send_languages",
+            &json!(&langs),
         );
     }
 
@@ -72,13 +78,15 @@ impl CoreState {
 
     pub(crate) fn client_notification(&mut self, cmd: CoreNotification) {
         use self::CoreNotification::*;
-        info!("client notification: {}", cmd);
         match cmd {
             SendHost {} => {
                 self.peer.send_host();
             }
             SendMemory {} => {
                 self.peer.send_memory();
+            }
+            SendLanguages {} => {
+                self.peer.send_languages();
             }
             ClientStarted { .. } => (),
             _ => {

@@ -14,6 +14,7 @@ pub enum CoreNotification {
 
     SendHost {},
     SendMemory {},
+    SendLanguages {},
     /// Notifies `xi-core` that the client has started.
     ClientStarted {
         #[serde(default)]
