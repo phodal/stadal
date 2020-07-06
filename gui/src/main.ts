@@ -64,9 +64,11 @@ const createTray = () => {
   let image_path = path.join(assetsDirectory, 'images/sunTemplate.png');
   tray = new Tray(nativeImage.createFromPath(image_path))
   const contextMenu = Menu.buildFromTemplate([
-    { label: "Exit", type: "normal",  click() {
+    {
+      label: "Exit", type: "normal", click() {
         app.quit()
-      }}
+      }
+    }
   ])
 
   tray.on('right-click', function () {
