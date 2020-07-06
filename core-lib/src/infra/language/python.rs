@@ -38,6 +38,5 @@ mod tests {
     #[test]
     fn exec_with_output_stdout() {
         let str = get_python_version();
-        println!(".... {}", str.unwrap())
     }
 }

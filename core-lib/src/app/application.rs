@@ -2,7 +2,6 @@ use std::sync::{Arc, Mutex, MutexGuard, Weak};
 
 use log::{info};
 use serde::de::{self, Deserialize, Deserializer};
-use serde::ser::{self, Serialize, Serializer};
 use serde_json::{self, Value};
 
 use xi_rpc::{Handler, RemoteError, RpcCtx, RpcPeer};

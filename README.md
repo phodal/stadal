@@ -56,6 +56,13 @@ requests
 {"method":"send_memory","params":{}}
 ```
 
+```
+{"method":"client_started","params":{}}
+{"method":"send_host","params":{}}
+{"method":"send_memory","params":{}}
+{"method":"send_languages","params":{}}
+{"method":"send_sizes","params":{}}
+```
 
 ## Development
 

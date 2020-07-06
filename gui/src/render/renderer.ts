@@ -20,10 +20,20 @@ function sendMessage() {
   (<any>window).stadal.send({method: "send_memory"})
 }
 
+function sendFirstMessages() {
+  (<any>window).stadal.send_multiple([
+    {method: "send_host"},
+    {method: "send_memory"},
+    {method: "send_languages"},
+    {method: "send_sizes"},
+  ])
+}
+
 function startGetData() {
   let memoryInterval = setInterval(() => {
     if ((<any>window).stadal) {
-      sendMessage();
+      // todo: use single memory
+      sendFirstMessages();
     }
   }, 1000);
 
@@ -40,14 +50,6 @@ function startGetData() {
   ipcRenderer.on('window.blur', (event, arg) => {
     clearInterval(memoryInterval);
     memoryInterval = null;
-  })
-
-  setTimeout(() => {
-    (<any>window).stadal.send_multiple([
-      {method: "send_host"},
-      {method: "send_memory"},
-      {method: "send_languages"}
-    ])
   })
 }
 

@@ -139,6 +139,10 @@ export default class Core extends EventEmitter {
           this.action.display_languages(msg.params)
           return;
         }
+        case CoreResponse.SEND_SIZES: {
+          this.action.display_sizes(msg.params)
+          return;
+        }
         default: {
           console.warn('Unhandled message from core: ', msg);
         }

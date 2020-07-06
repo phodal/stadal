@@ -22,6 +22,11 @@ interface Language {
   version: string,
 }
 
+interface CleanSize {
+  name: string,
+  size: string,
+}
+
 @injectable()
 export default class Actions {
   display_memory(data: StadalMemory) {
@@ -42,5 +47,9 @@ export default class Actions {
       result += `${capitalizeFirstLetter(datum.name)} : ${datum.version}<br>`
     }
     document.getElementById("languages").innerHTML = result;
+  }
+
+  display_sizes(data: CleanSize[]) {
+    console.log(data);
   }
 }

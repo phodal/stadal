@@ -8,15 +8,11 @@ pub enum CoreNotification {
     TracingConfig {
         enabled: bool,
     },
-    SetTheme {
-        theme_name: String,
-    },
 
     SendHost {},
     SendMemory {},
     SendLanguages {},
     SendSizes {},
-    /// Notifies `xi-core` that the client has started.
     ClientStarted {
         #[serde(default)]
         config_dir: Option<PathBuf>,

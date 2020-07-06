@@ -1,10 +1,8 @@
-use std::{fs, env};
-use std::fs::Metadata;
-use futures::io::Error;
+use std::{fs};
 
 pub fn get_docker_size() -> u64 {
     let home = std::env::var("HOME").unwrap();
-    let path = format!("{}//Library/Containers/com.docker.docker/Data/vms/0/data/Docker.raw", home);
+    let path = format!("{}/Library/Containers/com.docker.docker/Data/vms/0/data/Docker.raw", home);
     match fs::metadata(path) {
         Ok(size) => {
             size.len()
