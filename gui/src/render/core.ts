@@ -147,7 +147,7 @@ export default class Core extends EventEmitter {
    * @param {String} data Raw data emitted from xi-core's stderr.
    */
   private errorFromCore(data: Buffer) {
-    console.log(`${data}`);
+    // console.log(`${data}`);
   }
 
   /**

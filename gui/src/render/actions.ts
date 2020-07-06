@@ -18,7 +18,6 @@ interface StadalHost {
 @injectable()
 export default class Actions {
   display_memory(data: StadalMemory) {
-    console.log(data);
     document.getElementById("mem-total").innerText = niceBytes(data.total);
     document.getElementById("mem-available").innerText = niceBytes(data.available);
     document.getElementById("mem-free").innerText = niceBytes(data.free);

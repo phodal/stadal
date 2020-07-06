@@ -27,6 +27,10 @@ Stats Demo App:
  - [bottom](https://github.com/ClementTsang/bottom) A cross-platform graphical process/system monitor with a customizable interface and a multitude of features. Supports Linux, macOS, and Windows. Inspired by both gtop and gotop.
  - [Zenith](https://github.com/bvaisvil/zenith) In terminal graphical metrics for your *nix system written in Rust.
 
+Dev Setup:
+
+ - Languages: [https://github.com/starship/starship](https://github.com/starship/starship)
+
 ## Documents
 
 Library:
@@ -50,6 +54,7 @@ requests
 
 
 ## Development
+
  - core-lib, Stadal Core
  - gui, Electron UI
  - rpc, Stadal Core RPC
