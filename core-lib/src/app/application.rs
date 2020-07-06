@@ -5,8 +5,8 @@ use serde_json::{self, Value};
 
 use xi_rpc::{Handler, RemoteError, RpcCtx, RpcPeer};
 
-use crate::infra::notif::CoreNotification;
-use crate::infra::notif::CoreNotification::{ClientStarted, TracingConfig};
+use crate::domain::notif::CoreNotification;
+use crate::domain::notif::CoreNotification::{ClientStarted, TracingConfig};
 use futures::executor;
 use crate::infra::memory::get_memory;
 use crate::infra::{get_host, get_languages, get_clean_size, get_cpu};
