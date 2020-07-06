@@ -37,6 +37,20 @@ let docRevPath              = "/.DocumentRevisions-V100/"
 let imessageAttachmentsPath = "~/Library/Messages/Attachments/"
 ```
 
+with Command:
+
+```
+sudo du -sh /var
+```
+
+Get All Homebrew
+
+https://stackoverflow.com/questions/40065188/get-size-of-each-installed-formula-in-homebrew
+
+```
+brew list | xargs brew info | egrep --color '\d*\.\d*(KB|MB|GB)'
+```
+
 ## 决策
 
 在这里补充上决策信息...
