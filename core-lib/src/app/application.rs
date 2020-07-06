@@ -13,12 +13,22 @@ use crate::infra::notif::CoreNotification;
 use crate::infra::notif::CoreNotification::{ClientStarted, TracingConfig};
 use futures::executor;
 use crate::infra::memory::get_memory;
+use crate::infra::get_host;
 
 pub struct Client(RpcPeer);
 
 impl Client {
     pub fn new(peer: RpcPeer) -> Self {
         Client(peer)
+    }
+
+    pub fn send_host(&self) {
+        let host = executor::block_on(get_host());
+        let host_str = serde_json::to_string(&host).unwrap();
+        self.0.send_rpc_notification(
+            "send_host",
+            &json!(host_str),
+        );
     }
 
     pub fn send_memory(&self) {
@@ -58,6 +68,9 @@ impl CoreState {
         use self::CoreNotification::*;
         info!("client notification: {}", cmd);
         match cmd {
+            SendHost {} => {
+                self.peer.send_host();
+            }
             SendMemory {} => {
                 self.peer.send_memory();
             }

@@ -1,22 +1,16 @@
-#[macro_use]
-extern crate log;
-extern crate fern;
 extern crate chrono;
 extern crate dirs;
+extern crate fern;
 
-use std::collections::HashMap;
 use std::fs;
 use std::io;
 use std::path::{Path, PathBuf};
 use std::process;
 
-use futures::executor::block_on;
 use log::{error, info, warn};
 
 use core_lib::app::Stadal;
 use xi_rpc::RpcLoop;
-use futures::io::Error;
-
 
 fn create_log_directory(path_with_file: &Path) -> io::Result<()> {
     let log_dir = path_with_file.parent().ok_or_else(|| io::Error::new(

@@ -12,6 +12,7 @@ pub enum CoreNotification {
         theme_name: String,
     },
 
+    SendHost {},
     SendMemory {},
     /// Notifies `xi-core` that the client has started.
     ClientStarted {
