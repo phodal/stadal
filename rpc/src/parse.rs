@@ -38,7 +38,7 @@ pub struct MessageReader(String);
 /// RPC message. This allows initial parsing and response handling to
 /// occur on the read thread. If the message looks like a request, it
 /// is passed to the main thread for handling.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize)]
 pub struct RpcObject(pub Value);
 
 #[derive(Debug, Clone, PartialEq)]

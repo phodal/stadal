@@ -1,5 +1,6 @@
 import "reflect-metadata";
 import * as path from "path";
+import {CoreMethod} from "./types/core";
 
 const {ipcRenderer} = require('electron')
 
@@ -9,7 +10,7 @@ let Core = require('./core').default;
 const opts = {
   filePath: path.resolve(__dirname, '..'),
   coreOptions: {
-    env: Object.assign({RUST_BACKTRACE: 1}, process.env)
+    env: Object.assign({RUST_BACKTRACE: "full"}, process.env)
   },
   viewOptions: {}
 };
@@ -17,7 +18,10 @@ const opts = {
 (<any>window).stadal = new Core(opts.coreOptions);
 
 function sendMessage() {
-  (<any>window).stadal.send({method: "send_memory"})
+  (<any>window).stadal.send_multiple([
+    {method: "send_host"},
+    {method: "send_memory"},
+  ])
 }
 
 function sendFirstMessages() {
@@ -32,7 +36,6 @@ function sendFirstMessages() {
 function startGetData() {
   let memoryInterval = setInterval(() => {
     if ((<any>window).stadal) {
-      // todo: use single memory
       sendFirstMessages();
     }
   }, 1000);

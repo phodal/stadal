@@ -325,22 +325,29 @@ impl<W: Write + Send> RpcLoop<W> {
                 };
 
                 let method = json.get_method().map(String::from);
-                match json.into_rpc::<H::Notification, H::Request>() {
-                    Ok(Call::Request(id, cmd)) => {
-                        let _t = trace_block_payload("handle request", &["rpc"], method.unwrap());
-                        let result = handler.handle_request(&ctx, cmd);
-                        peer.respond(result, id);
-                    }
-                    Ok(Call::Notification(cmd)) => {
-                        let _t = trace_block_payload("handle notif", &["rpc"], method.unwrap());
-                        handler.handle_notification(&ctx, cmd);
-                    }
-                    Ok(Call::InvalidRequest(id, err)) => peer.respond(Err(err), id),
-                    Err(err) => {
-                        trace_payload("read loop exit", &["rpc"], err.to_string());
-                        peer.disconnect();
-                        return ReadError::UnknownRequest(err);
-                    }
+                match method {
+                    None => {
+                        info!("json: {}", json!(json))
+                    },
+                    Some(_) => {
+                        match json.into_rpc::<H::Notification, H::Request>() {
+                            Ok(Call::Request(id, cmd)) => {
+                                let _t = trace_block_payload("handle request", &["rpc"], method.unwrap());
+                                let result = handler.handle_request(&ctx, cmd);
+                                peer.respond(result, id);
+                            }
+                            Ok(Call::Notification(cmd)) => {
+                                let _t = trace_block_payload("handle notif", &["rpc"], method.unwrap());
+                                handler.handle_notification(&ctx, cmd);
+                            }
+                            Ok(Call::InvalidRequest(id, err)) => peer.respond(Err(err), id),
+                            Err(err) => {
+                                trace_payload("read loop exit", &["rpc"], err.to_string());
+                                peer.disconnect();
+                                return ReadError::UnknownRequest(err);
+                            }
+                        }
+                    },
                 }
             }
         })
