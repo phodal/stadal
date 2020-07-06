@@ -30,6 +30,7 @@ function sendFirstMessages() {
     {method: "send_memory"},
     {method: "send_languages"},
     {method: "send_sizes"},
+    {method: "send_cpu"},
   ])
 }
 

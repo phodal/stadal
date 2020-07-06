@@ -1,3 +1,6 @@
+mod cpu;
+pub use cpu::get_cpu;
+
 mod cleaner;
 pub use cleaner::{get_clean_size, CleanSize};
 

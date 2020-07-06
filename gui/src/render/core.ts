@@ -143,6 +143,10 @@ export default class Core extends EventEmitter {
           this.action.display_sizes(msg.params)
           return;
         }
+        case CoreResponse.SEND_CPU: {
+          this.action.display_cpu(msg.params)
+          return;
+        }
         default: {
           console.warn('Unhandled message from core: ', msg);
         }

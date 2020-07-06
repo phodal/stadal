@@ -1,5 +1,5 @@
 use heim::host;
-use heim::units::{frequency, information, thermodynamic_temperature, time};
+use heim::units::{time};
 
 #[derive(Clone, Debug, Default, Serialize, Deserialize)]
 pub struct StadalHost {

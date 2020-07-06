@@ -4,6 +4,7 @@ export enum CoreMethod {
   SEND_HOST = 'send_host',
   SEND_LANGUAGES = 'send_languages',
   SEND_SIZES = 'send_sizes',
+  SEND_CPU = 'send_cpu',
 }
 
 export enum CoreResponse {
@@ -12,4 +13,5 @@ export enum CoreResponse {
   SEND_HOST = 'send_host',
   SEND_LANGUAGES = 'send_languages',
   SEND_SIZES = 'send_sizes',
+  SEND_CPU = 'send_cpu',
 }

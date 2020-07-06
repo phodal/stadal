@@ -1,7 +1,6 @@
 use std::sync::{Arc, Mutex, MutexGuard, Weak};
 
 use log::{info};
-use serde::de::{self, Deserialize, Deserializer};
 use serde_json::{self, Value};
 
 use xi_rpc::{Handler, RemoteError, RpcCtx, RpcPeer};
@@ -10,7 +9,7 @@ use crate::infra::notif::CoreNotification;
 use crate::infra::notif::CoreNotification::{ClientStarted, TracingConfig};
 use futures::executor;
 use crate::infra::memory::get_memory;
-use crate::infra::{get_host, get_languages, get_clean_size};
+use crate::infra::{get_host, get_languages, get_clean_size, get_cpu};
 
 pub struct Client(RpcPeer);
 
@@ -61,6 +60,14 @@ impl Client {
             }),
         );
     }
+
+    pub fn send_cpu(&self) {
+        let cpu = executor::block_on(get_cpu());
+        self.0.send_rpc_notification(
+            "send_cpu",
+            &json!(&cpu),
+        );
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
@@ -96,6 +103,9 @@ impl CoreState {
             }
             SendSizes {} => {
                 self.peer.send_sizes();
+            }
+            SendCpu {} => {
+                self.peer.send_cpu();
             }
             ClientStarted { .. } => (),
             _ => {

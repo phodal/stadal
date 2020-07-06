@@ -13,6 +13,7 @@ pub enum CoreNotification {
     SendMemory {},
     SendLanguages {},
     SendSizes {},
+    SendCpu {},
     ClientStarted {
         #[serde(default)]
         config_dir: Option<PathBuf>,
