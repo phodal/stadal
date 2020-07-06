@@ -51,6 +51,15 @@ https://stackoverflow.com/questions/40065188/get-size-of-each-installed-formula-
 brew list | xargs brew info | egrep --color '\d*\.\d*(KB|MB|GB)'
 ```
 
+Dev Tools:
+
+### Gradle
+
+```
+rm -rf ~/.gradle/caches/build-cache-*
+```
+ 
+
 ## 决策
 
 在这里补充上决策信息...
