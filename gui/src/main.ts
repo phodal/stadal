@@ -72,7 +72,6 @@ const createTray = () => {
   tray.on('right-click', function () {
     tray.setContextMenu(contextMenu);
   })
-  // tray.on('double-click', toggleWindow)
   tray.on('mouse-enter', function (event) {
     tray.setContextMenu(null);
     toggleWindow()
