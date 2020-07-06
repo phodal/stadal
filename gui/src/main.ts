@@ -15,7 +15,7 @@ function createWindow() {
     frame: false,
     show: false,
     fullscreenable: false,
-    resizable: false,
+    // resizable: false,
     transparent: true,
     backgroundColor: '#fff',
     webPreferences: {
@@ -63,16 +63,9 @@ const getWindowPosition = () => {
 const createTray = () => {
   let image_path = path.join(assetsDirectory, 'images/sunTemplate.png');
   tray = new Tray(nativeImage.createFromPath(image_path))
-  const contextMenu = Menu.buildFromTemplate([
-    {
-      label: "Exit", type: "normal", click() {
-        app.quit()
-      }
-    }
-  ])
-  tray.setContextMenu(contextMenu);
-
-  tray.on('mouse-enter', function (event) {
+  tray.on('right-click', toggleWindow)
+  tray.on('double-click', toggleWindow)
+  tray.on('click', function (event) {
     toggleWindow()
 
     if (win.isVisible() && process.defaultApp && event.metaKey) {
