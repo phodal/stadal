@@ -16,17 +16,25 @@ const opts = {
 
 (<any>window).stadal = new Core(opts.coreOptions);
 
+function sendMessage() {
+  (<any>window).stadal.send_multiple([
+    {method: "send_host"},
+    {method: "send_memory"}
+  ])
+}
+
 function startGetMemory() {
-  let memoryInterval: NodeJS.Timeout;
+  let memoryInterval = setInterval(() => {
+    if ((<any>window).stadal) {
+      sendMessage();
+    }
+  }, 1000);
 
   ipcRenderer.on('window.focus', (event, arg) => {
     if (!memoryInterval) {
       memoryInterval = setInterval(() => {
         if ((<any>window).stadal) {
-          (<any>window).stadal.send_multiple([
-              {method: "send_host"},
-              {method: "send_memory"}
-            ])
+          sendMessage();
         }
       }, 1000);
     }

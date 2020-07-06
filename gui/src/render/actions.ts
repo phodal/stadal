@@ -24,11 +24,8 @@ export default class Actions {
     document.getElementById("mem-free").innerText = niceBytes(data.free);
   }
   display_host(data: StadalHost) {
-    document.getElementById("host-name").innerText = data.name;
-    document.getElementById("host-release").innerText = data.release;
     document.getElementById("host-version").innerText = data.version;
     document.getElementById("host-hostname").innerText = data.hostname;
-    document.getElementById("host-arch").innerText = data.arch;
     document.getElementById("host-uptime").innerText = secondsToHms(data.uptime);
   }
 }
