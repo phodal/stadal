@@ -36,3 +36,9 @@ function startGetMemory() {
 setTimeout(() => {
   startGetMemory();
 }, 1000);
+
+const demoButton = document.getElementById('exit-app');
+demoButton.addEventListener('click', () => {
+  console.log('click');
+  ipcRenderer.send('stadal.exit');
+})

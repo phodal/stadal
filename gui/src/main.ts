@@ -94,3 +94,7 @@ const showWindow = () => {
 ipcMain.on('show-window', () => {
   showWindow()
 })
+
+ipcMain.on('stadal.exit', () => {
+  app.exit()
+})

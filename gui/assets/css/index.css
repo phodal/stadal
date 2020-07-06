@@ -11,3 +11,7 @@
     display: flex;
     justify-content: space-between;
 }
+
+#exit-app {
+  float: right;
+}
