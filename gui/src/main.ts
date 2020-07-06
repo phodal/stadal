@@ -63,17 +63,18 @@ const getWindowPosition = () => {
 const createTray = () => {
   let image_path = path.join(assetsDirectory, 'images/sunTemplate.png');
   tray = new Tray(nativeImage.createFromPath(image_path))
-  tray.setToolTip('Stadal')
   const contextMenu = Menu.buildFromTemplate([
     { label: "Exit", type: "normal",  click() {
         app.quit()
       }}
   ])
-  tray.setContextMenu(contextMenu);
 
-  tray.on('right-click', toggleWindow)
-  tray.on('double-click', toggleWindow)
-  tray.on('click', function (event) {
+  tray.on('right-click', function () {
+    tray.setContextMenu(contextMenu);
+  })
+  // tray.on('double-click', toggleWindow)
+  tray.on('mouse-enter', function (event) {
+    tray.setContextMenu(null);
     toggleWindow()
 
     if (win.isVisible() && process.defaultApp && event.metaKey) {
