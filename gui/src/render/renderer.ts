@@ -1,5 +1,6 @@
 import "reflect-metadata";
 import * as path from "path";
+
 const {ipcRenderer} = require('electron')
 
 let Core = require('./core').default;
@@ -19,12 +20,10 @@ function startGetMemory() {
     let memoryInterval: NodeJS.Timeout;
 
     ipcRenderer.on('window.focus', (event, arg) => {
-        document.getElementById("info").innerText = "window.focus";
         if (!memoryInterval) {
             memoryInterval = setInterval(() => {
                 (<any>window).stadal.send("send_memory")
             }, 1000);
-            console.log(memoryInterval);
         }
     })
 
@@ -35,7 +34,6 @@ function startGetMemory() {
     })
 }
 
-// waiting for start stadal core process;
-setTimeout(()=> {
+setTimeout(() => {
     startGetMemory();
 }, 1000);
