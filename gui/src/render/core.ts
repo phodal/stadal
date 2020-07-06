@@ -77,6 +77,24 @@ export default class Core extends EventEmitter {
     }
   }
 
+  public send_multiple(data: { method: CoreMethod, params?: any, rest?: any }[]): boolean {
+    let output = "";
+    for (let datum of data) {
+      const st = {
+        method: datum.method,
+        params: datum.params ? datum.params : {}
+      }
+      output += `${JSON.stringify(st)}\n`;
+    }
+    try {
+      this.stdin().write(output);
+      return true;
+    } catch (e) {
+      console.error(e);
+      return false;
+    }
+  }
+
   public close() {
     this.child.kill();
   }
@@ -103,26 +121,18 @@ export default class Core extends EventEmitter {
    * @param {String} data Raw data emitted from xi-core's stdout.
    */
   private eventFromCore(raw: string) {
-    // TODO: refactor - switch?
-    // TODO: use message enum
     parseMessages(raw).forEach((msg) => {
-      // A new view was created if `msg.result` is set.
-      if ('result' in msg) {
-        this.proxies[msg.result] = new ViewProxy(this.proxySend, msg.id, msg.result);
-        this.emit('new_view', this.proxies[msg.result]);
-        return;
-      }
       // Otherwise respond to other messages.
       switch (msg.method) {
         case CoreResponse.CONFIG_STATUS: {
           return;
         }
         case CoreResponse.SEND_MEMORY: {
-          this.action.display_memory(raw)
+          this.action.display_memory(msg.params)
           return;
         }
         case CoreResponse.SEND_HOST: {
-          this.action.display_host(raw)
+          this.action.display_host(msg.params)
           return;
         }
         default: {

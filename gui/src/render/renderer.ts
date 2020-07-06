@@ -23,8 +23,10 @@ function startGetMemory() {
     if (!memoryInterval) {
       memoryInterval = setInterval(() => {
         if ((<any>window).stadal) {
-          (<any>window).stadal.send("send_host")
-          (<any>window).stadal.send("send_memory")
+          (<any>window).stadal.send_multiple([
+              {method: "send_host"},
+              {method: "send_memory"}
+            ])
         }
       }, 1000);
     }
