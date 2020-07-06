@@ -17,13 +17,10 @@ const opts = {
 (<any>window).stadal = new Core(opts.coreOptions);
 
 function sendMessage() {
-  (<any>window).stadal.send_multiple([
-    {method: "send_host"},
-    {method: "send_memory"}
-  ])
+  (<any>window).stadal.send({method: "send_memory"})
 }
 
-function startGetMemory() {
+function startGetData() {
   let memoryInterval = setInterval(() => {
     if ((<any>window).stadal) {
       sendMessage();
@@ -44,10 +41,18 @@ function startGetMemory() {
     clearInterval(memoryInterval);
     memoryInterval = null;
   })
+
+  setTimeout(() => {
+    (<any>window).stadal.send_multiple([
+      {method: "send_host"},
+      {method: "send_memory"},
+      {method: "send_languages"}
+    ])
+  })
 }
 
 setTimeout(() => {
-  startGetMemory();
+  startGetData();
 }, 1000);
 
 const demoButton = document.getElementById('exit-app');

@@ -135,6 +135,10 @@ export default class Core extends EventEmitter {
           this.action.display_host(msg.params)
           return;
         }
+        case CoreResponse.SEND_LANGUAGES: {
+          this.action.display_languages(msg.params)
+          return;
+        }
         default: {
           console.warn('Unhandled message from core: ', msg);
         }
@@ -147,7 +151,7 @@ export default class Core extends EventEmitter {
    * @param {String} data Raw data emitted from xi-core's stderr.
    */
   private errorFromCore(data: Buffer) {
-    // console.log(`${data}`);
+    console.log(`${data}`);
   }
 
   /**
