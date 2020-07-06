@@ -24,10 +24,16 @@ impl Client {
 
     pub fn send_host(&self) {
         let host = executor::block_on(get_host());
-        let host_str = serde_json::to_string(&host).unwrap();
         self.0.send_rpc_notification(
             "send_host",
-            &json!(host_str),
+            &json!({
+                "name": &host.name,
+                "release": &host.release,
+                "version": &host.version,
+                "hostname": &host.hostname,
+                "arch": &host.arch,
+                "uptime": &host.uptime
+            }),
         );
     }
 

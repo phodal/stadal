@@ -24,7 +24,6 @@ export default class Actions {
   }
   display_host(raw: string) {
     let data: StadalHost = JSON.parse(raw).params;
-    console.log(data);
     document.getElementById("host-name").innerText = data.name;
     document.getElementById("host-release").innerText = data.release;
     document.getElementById("host-version").innerText = data.version;
