@@ -5,4 +5,5 @@ export enum CoreMethod {
 export enum CoreResponse {
   CONFIG_STATUS = 'config_status',
   SEND_MEMORY = 'send_memory',
+  SEND_HOST = 'send_host',
 }

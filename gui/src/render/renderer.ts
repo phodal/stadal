@@ -22,7 +22,10 @@ function startGetMemory() {
   ipcRenderer.on('window.focus', (event, arg) => {
     if (!memoryInterval) {
       memoryInterval = setInterval(() => {
-        (<any>window).stadal.send("send_memory")
+        if ((<any>window).stadal) {
+          (<any>window).stadal.send("send_host")
+          // (<any>window).stadal.send("send_memory")
+        }
       }, 1000);
     }
   })

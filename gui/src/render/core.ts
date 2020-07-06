@@ -121,6 +121,10 @@ export default class Core extends EventEmitter {
           this.action.display_memory(raw)
           return;
         }
+        case CoreResponse.SEND_HOST: {
+          this.action.display_host(raw)
+          return;
+        }
         default: {
           console.warn('Unhandled message from core: ', msg);
         }
