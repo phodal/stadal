@@ -1,4 +1,5 @@
 import {injectable} from "tsyringe";
+import {niceBytes, secondsToHms} from "./format";
 
 interface StadalMemory {
   total: string,
@@ -17,9 +18,10 @@ interface StadalHost {
 @injectable()
 export default class Actions {
   display_memory(data: StadalMemory) {
-    document.getElementById("mem-total").innerText = data.total;
-    document.getElementById("mem-available").innerText = data.available;
-    document.getElementById("mem-free").innerText = data.free;
+    console.log(data);
+    document.getElementById("mem-total").innerText = niceBytes(data.total);
+    document.getElementById("mem-available").innerText = niceBytes(data.available);
+    document.getElementById("mem-free").innerText = niceBytes(data.free);
   }
   display_host(data: StadalHost) {
     document.getElementById("host-name").innerText = data.name;
@@ -27,6 +29,6 @@ export default class Actions {
     document.getElementById("host-version").innerText = data.version;
     document.getElementById("host-hostname").innerText = data.hostname;
     document.getElementById("host-arch").innerText = data.arch;
-    document.getElementById("host-uptime").innerText = data.uptime;
+    document.getElementById("host-uptime").innerText = secondsToHms(data.uptime);
   }
 }

@@ -10,9 +10,9 @@ pub struct StadalMemory {
 pub async fn get_memory() -> StadalMemory {
     let memory = memory::memory().await.unwrap();
 
-    let total = memory.total().get::<information::megabyte>();
-    let free = memory.free().get::<information::megabyte>();
-    let available = memory.available().get::<information::megabyte>();
+    let total = memory.total().get::<information::byte>();
+    let free = memory.free().get::<information::byte>();
+    let available = memory.available().get::<information::byte>();
 
     StadalMemory {
         total: total.to_string(),
