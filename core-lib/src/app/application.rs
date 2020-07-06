@@ -53,11 +53,7 @@ impl Client {
         let memory = executor::block_on(get_memory());
         self.0.send_rpc_notification(
             "send_memory",
-            &json!({
-                "total": &memory.total,
-                "available": &memory.available,
-                "free": &memory.free
-            }),
+            &json!(&memory),
         );
     }
 

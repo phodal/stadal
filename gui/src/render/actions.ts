@@ -5,7 +5,10 @@ import {capitalizeFirstLetter} from "../utils/string-util";
 interface StadalMemory {
   total: string,
   available: string,
-  free: string
+  free: string,
+  swap_total: string,
+  swap_free: string,
+  swap_used: string,
 }
 
 interface StadalHost {
@@ -41,6 +44,9 @@ export default class Actions {
     document.getElementById("mem-total").innerText = niceBytes(data.total);
     document.getElementById("mem-available").innerText = niceBytes(data.available);
     document.getElementById("mem-free").innerText = niceBytes(data.free);
+    document.getElementById("swap-total").innerText = niceBytes(data.swap_total);
+    document.getElementById("swap-free").innerText = niceBytes(data.swap_free);
+    document.getElementById("swap-used").innerText = niceBytes(data.swap_used);
   }
 
   display_host(data: StadalHost) {

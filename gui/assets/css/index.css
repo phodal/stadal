@@ -1,15 +1,15 @@
 /* Variables */
 :root {
-    --background-color: #f5f5f4;
-    --text-color: #333;
-    --window-border-radius: 6px;
-    --font-size: 14px;
+  --background-color: #f5f5f4;
+  --text-color: #333;
+  --window-border-radius: 6px;
+  --font-size: 14px;
 }
 
 .memory-content {
-    border: solid 1px #000;
-    display: flex;
-    justify-content: space-between;
+  border: solid 1px #000;
+  display: flex;
+  justify-content: space-between;
 }
 
 #exit-app {

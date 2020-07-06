@@ -1,36 +1,34 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <meta charset="UTF-8"/>
-    <title>Hello World!</title>
-    <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <!--    <meta-->
-    <!--      http-equiv="Content-Security-Policy"-->
-    <!--      content="default-src 'self'; script-src 'self'"-->
-    <!--    />-->
-    <!--    <meta-->
-    <!--      http-equiv="X-Content-Security-Policy"-->
-    <!--      content="default-src 'self'; script-src 'self'"-->
-    <!--    />-->
-    <link rel="stylesheet" href="../assets/css/index.css">
+  <meta charset="UTF-8"/>
+  <title>Hello World!</title>
+  <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
+  <!--    <meta-->
+  <!--      http-equiv="Content-Security-Policy"-->
+  <!--      content="default-src 'self'; script-src 'self'"-->
+  <!--    />-->
+  <!--    <meta-->
+  <!--      http-equiv="X-Content-Security-Policy"-->
+  <!--      content="default-src 'self'; script-src 'self'"-->
+  <!--    />-->
+  <link rel="stylesheet" href="../assets/css/index.css">
 </head>
 <body>
 <button id="exit-app">exit</button>
 <div id="memory">
-    <h3>Memory</h3>
-    <div class="memory-content">
-      <div>
-        <span class="title">Total</span>
-        <span class="value" id="mem-total"></span>
-      </div>
-      <div>
-        <span class="title">Available</span>
-        <span class="value" id="mem-available"></span></div>
-      <div>
-        <span class="title">Free</span>
-        <span class="value" id="mem-free"></span>
-      </div>
-    </div>
+  <h3>Memory</h3>
+  <div class="memory-content">
+    <div><span class="title">Total     </span><span class="value" id="mem-total"></span></div>
+    <div><span class="title">Available </span><span class="value" id="mem-available"></span></div>
+    <div><span class="title">Free      </span><span class="value" id="mem-free"></span></div>
+  </div>
+  <h4>Swap</h4>
+  <div class="memory-content">
+    <div><span class="title">Total     </span><span class="value" id="swap-total"></span></div>
+    <div><span class="title">Free      </span><span class="value" id="swap-free"></span></div>
+    <div><span class="title">Used      </span><span class="value" id="swap-used"></span></div>
+  </div>
 </div>
 <div>
   <h3>CPU</h3>
@@ -39,7 +37,6 @@
 <div id="host">
   <h3>Host</h3>
   <p>UP Time: <span id="host-uptime"></span></p>
-  <p id="host-version"></p>
 </div>
 <div>
   <h3>Programming Env</h3>
@@ -49,8 +46,10 @@
   <h3>Clean Size</h3>
   <div id="sizes"></div>
 </div>
+
+<p id="host-version"></p>
 <script>
-    require('../dist/render/renderer.js')
+  require('../dist/render/renderer.js')
 </script>
 </body>
 </html>
