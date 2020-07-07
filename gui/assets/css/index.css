@@ -6,6 +6,10 @@
   --font-size: 14px;
 }
 
+body {
+  padding: 12px;
+}
+
 .memory-content {
   border: solid 1px #000;
   display: flex;

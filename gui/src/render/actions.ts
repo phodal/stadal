@@ -66,9 +66,11 @@ export default class Actions {
     document.getElementById("mem-total").innerText = niceBytes(data.total);
     document.getElementById("mem-available").innerText = niceBytes(data.available);
     document.getElementById("mem-free").innerText = niceBytes(data.free);
-    document.getElementById("swap-total").innerText = niceBytes(data.swap_total);
-    document.getElementById("swap-free").innerText = niceBytes(data.swap_free);
-    document.getElementById("swap-used").innerText = niceBytes(data.swap_used);
+    document.getElementById("swap-container").innerHTML = `
+<div class="progress">
+  <div class="progress-bar" role="progressbar" aria-valuenow="${data.swap_used}" aria-valuemin="0" aria-valuemax="${data.swap_total}"></div>
+</div>
+    `;
   }
 
   display_host(data: StadalHost) {

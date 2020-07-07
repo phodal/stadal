@@ -2,6 +2,7 @@
 <html>
 <head>
   <meta charset="UTF-8"/>
+  <meta http-equiv="X-UA-Compatible" content="IE=11" />
   <title>Hello World!</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
@@ -15,9 +16,17 @@
   <!--    />-->
   <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
   <link rel="stylesheet" href="../assets/css/index.css">
+
+  <script>window.$ = window.jQuery = require('../assets/js/jquery-3.5.1.slim.min.js');</script>
+<!--  <script src="../assets/js/jquery-3.5.1.slim.min.js"></script>-->
+
+  <script src="../assets/js/bootstrap.min.js"></script>
+  <script src="../assets/js/popper.min.js"></script>
 </head>
 <body>
-<button type="button" class="btn btn-danger" id="exit-app">exit</button>
+<button type="button" class="close" aria-label="Close" id="exit-app">
+  <span aria-hidden="true">&times;</span>
+</button>
 <div id="memory">
   <h4>Memory</h4>
   <div class="memory-content">
@@ -26,10 +35,8 @@
     <div><span class="title">Free      </span><span class="value" id="mem-free"></span></div>
   </div>
   <h4>Swap</h4>
-  <div class="memory-content">
-    <div><span class="title">Total     </span><span class="value" id="swap-total"></span></div>
-    <div><span class="title">Free      </span><span class="value" id="swap-free"></span></div>
-    <div><span class="title">Used      </span><span class="value" id="swap-used"></span></div>
+  <div id="swap-container">
+
   </div>
   <h4>Disk</h4>
   <div id="disk">
@@ -63,9 +70,6 @@
 </div>
 
 <p id="host-version"></p>
-<script src="../assets/js/jquery-3.5.1.slim.min.js"></script>
-<script src="../assets/js/popper.min.js"></script>
-<script src="../assets/js/bootstrap.min.js"></script>
 <script>
   require('../dist/render/renderer.js')
 </script>
