@@ -46,8 +46,6 @@ async fn usage(process: Process) -> ProcessResult<(process::Process, Ratio, proc
 
 pub async fn get_processes() -> Option<Vec<StadalProcess>> {
     let mut output = vec![];
-    // let mut results = process::processes();
-
     let mut results = process::processes()
         .map_ok(|process| {
             usage(process)
