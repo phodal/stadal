@@ -19,8 +19,8 @@ const opts = {
 
 function sendMessage() {
   (<any>window).stadal.send_multiple([
-    {method: "send_host"},
     {method: "send_memory"},
+    {method: "send_processes"},
   ])
 }
 
@@ -32,6 +32,7 @@ function sendFirstMessages() {
     {method: "send_sizes"},
     {method: "send_cpu"},
     {method: "send_disks"},
+    {method: "send_processes"},
   ])
 }
 
@@ -60,7 +61,7 @@ function startGetData() {
 
 setTimeout(() => {
   startGetData();
-}, 1000);
+}, 5000);
 
 const demoButton = document.getElementById('exit-app');
 demoButton.addEventListener('click', () => {

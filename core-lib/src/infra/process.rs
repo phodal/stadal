@@ -122,17 +122,20 @@ pub fn get_sort_processes() -> Vec<StadalProcess> {
     let sorter = field_comparator();
     let sortorder = &ProcessTableSortOrder::Descending;
 
-    process_ids.sort_by(|a, b| {
-        let pa = pm.get(&a).expect("Error in sorting the process table.");
-        let pb = pm.get(&b).expect("Error in sorting the process table.");
-
-        let ord = sorter(pa, pb);
+    proc_vec.sort_by(|a, b| {
+        let ord = sorter(a, b);
         match sortorder {
             ProcessTableSortOrder::Ascending => ord,
             ProcessTableSortOrder::Descending => ord.reverse(),
         }
     });
 
+    // let mut results = vec![];
+    // for (k, v) in pm.iter() {
+    //     results.push(v.clone());
+    // }
+    //
+    // results
     proc_vec
 }
 

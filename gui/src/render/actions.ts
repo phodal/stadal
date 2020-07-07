@@ -115,6 +115,14 @@ export default class Actions {
   }
 
   display_processes(data: Process[]) {
-    console.log(data)
+    let results = '';
+    for (let datum of data) {
+      let innerHTML = `<div class="item">
+<span>${datum.pid}</span><span>${datum.name}</span><span>${datum.cpu_usage.toFixed(2)}%</span><span>${niceBytes(datum.mem)}</span>
+</div>
+`;
+      results += innerHTML;
+    }
+    document.getElementById("processes").innerHTML = results;
   }
 }

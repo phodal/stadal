@@ -12,6 +12,11 @@
   justify-content: space-between;
 }
 
+#processes .item {
+  display: flex;
+  justify-content: space-between;
+}
+
 #exit-app {
   float: right;
 }

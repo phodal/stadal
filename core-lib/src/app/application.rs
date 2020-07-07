@@ -9,7 +9,7 @@ use crate::domain::notif::CoreNotification;
 use crate::domain::notif::CoreNotification::{ClientStarted, TracingConfig};
 use futures::executor;
 use crate::infra::memory::get_memory;
-use crate::infra::{get_host, get_languages, get_clean_size, get_cpu, get_disks, get_sort_processes};
+use crate::infra::{get_host, get_languages, get_clean_size, get_cpu, get_disks, get_sort_processes, get_processes};
 
 pub struct Client(RpcPeer);
 
