@@ -1,6 +1,5 @@
 import "reflect-metadata";
 import * as path from "path";
-import {CoreMethod} from "./types/core";
 
 const {ipcRenderer} = require('electron')
 

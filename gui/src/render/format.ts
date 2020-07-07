@@ -1,8 +1,13 @@
 const units = ['bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
 
 export function niceBytes(x: string | number) {
-
-  let l = 0, n = parseInt(x, 10) || 0;
+  let l = 0;
+  let n;
+  if (typeof x === "string") {
+    n = parseInt(x, 10) || 0;
+  } else {
+    n = x;
+  }
 
   while (n >= 1024 && ++l) {
     n = n / 1024;
