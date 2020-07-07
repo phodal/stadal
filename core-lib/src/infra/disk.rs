@@ -1,7 +1,7 @@
 use heim::disk;
 use heim::units::{information};
 use std::ffi::OsStr;
-use futures::{StreamExt, TryStreamExt};
+use futures::{StreamExt};
 
 #[derive(Clone, Debug, Default, Serialize, Deserialize)]
 pub struct StadalDisk {
