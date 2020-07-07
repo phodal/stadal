@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <title>Hello World!</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
   <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
   <!--    <meta-->
   <!--      http-equiv="Content-Security-Policy"-->
@@ -16,7 +17,7 @@
   <link rel="stylesheet" href="../assets/css/index.css">
 </head>
 <body>
-<button id="exit-app">exit</button>
+<button type="button" class="btn btn-danger" id="exit-app">exit</button>
 <div id="memory">
   <h4>Memory</h4>
   <div class="memory-content">
@@ -41,7 +42,12 @@
 </div>
 <div>
   <h4>Processes</h4>
-  <div id="processes"></div>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm">PID</div><div class="col-sm">Name</div><div class="col-sm">CPU</div><div class="col-sm">Mem</div>
+    </div>
+    <div id="processes"></div>
+  </div>
 </div>
 <div id="host">
   <h4>Host</h4>

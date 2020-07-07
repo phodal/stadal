@@ -117,8 +117,8 @@ export default class Actions {
   display_processes(data: Process[]) {
     let results = '';
     for (let datum of data) {
-      let innerHTML = `<div class="item">
-<span>${datum.pid}</span><span>${datum.name}</span><span>${datum.cpu_usage.toFixed(2)}%</span><span>${niceBytes(datum.mem)}</span>
+      let innerHTML = `<div class="row">
+<div class="col-sm">${datum.pid}</div><div class="col-sm">${datum.name}</div><div class="col-sm">${datum.cpu_usage.toFixed(2)}%</div><div class="col-sm">${niceBytes(datum.mem)}</div>
 </div>
 `;
       results += innerHTML;
