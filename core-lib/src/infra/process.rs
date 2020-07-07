@@ -15,8 +15,8 @@ pub struct StadalProcess {
     name: String,
     status: String,
     cpu_usage: f32,
-    mem: String,
-    virtual_mem: String,
+    mem: u64,
+    virtual_mem: u64,
     parent: String,
     exe: String,
     command: String,
@@ -29,8 +29,8 @@ impl StadalProcess {
             name: "".to_string(),
             status: "".to_string(),
             cpu_usage: 0.0,
-            mem: "".to_string(),
-            virtual_mem: "".to_string(),
+            mem: 0,
+            virtual_mem: 0,
             parent: "".to_string(),
             exe: "".to_string(),
             command: "".to_string(),
@@ -69,8 +69,8 @@ pub async fn get_processes() -> Option<Vec<StadalProcess>> {
                 stadal_process.status = format!("{:?}", status);
             }
             stadal_process.cpu_usage = usage.get::<ratio::percent>();
-            stadal_process.mem = memory.rss().get::<information::byte>().to_string();
-            stadal_process.virtual_mem = memory.vms().get::<information::byte>().to_string();
+            stadal_process.mem = memory.rss().get::<information::byte>();
+            stadal_process.virtual_mem = memory.vms().get::<information::byte>();
 
             if let Ok(parent_pid) = process.parent_pid().await {
                 stadal_process.parent = parent_pid.to_string();
@@ -98,7 +98,6 @@ pub async fn get_processes() -> Option<Vec<StadalProcess>> {
         None
     }
 }
-
 
 #[derive(PartialEq, Eq)]
 pub enum ProcessTableSortOrder {
