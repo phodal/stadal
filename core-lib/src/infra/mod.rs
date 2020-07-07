@@ -1,4 +1,5 @@
 mod process;
+pub use process::{get_processes, get_sort_processes};
 
 mod disk;
 pub use disk::get_disks;

@@ -9,7 +9,7 @@ use crate::domain::notif::CoreNotification;
 use crate::domain::notif::CoreNotification::{ClientStarted, TracingConfig};
 use futures::executor;
 use crate::infra::memory::get_memory;
-use crate::infra::{get_host, get_languages, get_clean_size, get_cpu, get_disks};
+use crate::infra::{get_host, get_languages, get_clean_size, get_cpu, get_disks, get_sort_processes};
 
 pub struct Client(RpcPeer);
 
@@ -72,6 +72,14 @@ impl Client {
             &json!(&disks),
         );
     }
+
+    pub fn send_processes(&self) {
+        let processes = get_sort_processes()[0..10].to_vec();
+        self.0.send_rpc_notification(
+            "send_processes",
+            &json!(&processes),
+        );
+    }
 }
 
 #[derive(Serialize, Deserialize, Debug, PartialEq)]
@@ -113,6 +121,9 @@ impl CoreState {
             }
             SendCpu {} => {
                 self.peer.send_cpu();
+            }
+            SendProcesses {} => {
+                self.peer.send_processes();
             }
             ClientStarted { .. } => (),
             _ => {

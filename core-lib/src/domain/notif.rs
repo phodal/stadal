@@ -15,6 +15,7 @@ pub enum CoreNotification {
     SendSizes {},
     SendDisks {},
     SendCpu {},
+    SendProcesses {},
     ClientStarted {
         #[serde(default)]
         config_dir: Option<PathBuf>,

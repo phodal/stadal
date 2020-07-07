@@ -47,6 +47,19 @@ interface Disk {
   free: string,
 }
 
+interface Process {
+  pid: number,
+  name: string,
+  status: string,
+  cpu_usage: number,
+  mem: number,
+  virtual_mem: number,
+  parent: string,
+  exe: string,
+  command: string,
+}
+
+
 @injectable()
 export default class Actions {
   display_memory(data: StadalMemory) {
@@ -80,14 +93,14 @@ export default class Actions {
   }
 
   display_cpu(data: CPU) {
-    let innerHTML =`CPU -> cores:${data.cores}, current: ${data.current_ghz} `;
+    let innerHTML = `CPU -> cores:${data.cores}, current: ${data.current_ghz} `;
     document.getElementById("cpu").innerText = innerHTML;
   }
 
   display_disks(data: Disk[]) {
     let results = '';
     for (let datum of data) {
-      let innerHTML =`<div class="memory-content">
+      let innerHTML = `<div class="memory-content">
 <div><span class="title">Device      </span><span class="value"></span>${datum.device}</div>
 <div><span class="title">Mount     </span><span class="value">${datum.mount}</span></div>
 <div><span class="title">Total     </span><span class="value">${niceBytes(datum.total)}</span></div>
@@ -99,5 +112,9 @@ export default class Actions {
       results += innerHTML;
     }
     document.getElementById("disk").innerHTML = results;
+  }
+
+  display_processes(data: Process[]) {
+    console.log(data)
   }
 }
