@@ -12,12 +12,13 @@
   <!--      http-equiv="X-Content-Security-Policy"-->
   <!--      content="default-src 'self'; script-src 'self'"-->
   <!--    />-->
+  <link rel="stylesheet" href="../assets/css/bootstrap.min.css">
   <link rel="stylesheet" href="../assets/css/index.css">
 </head>
 <body>
 <button id="exit-app">exit</button>
 <div id="memory">
-  <h3>Memory</h3>
+  <h4>Memory</h4>
   <div class="memory-content">
     <div><span class="title">Total     </span><span class="value" id="mem-total"></span></div>
     <div><span class="title">Available </span><span class="value" id="mem-available"></span></div>
@@ -35,27 +36,30 @@
   </div>
 </div>
 <div>
-  <h3>CPU</h3>
+  <h4>CPU</h4>
   <div id="cpu"></div>
 </div>
 <div>
-  <h3>Processes</h3>
+  <h4>Processes</h4>
   <div id="processes"></div>
 </div>
 <div id="host">
-  <h3>Host</h3>
+  <h4>Host</h4>
   <p>UP Time: <span id="host-uptime"></span></p>
 </div>
 <div>
-  <h3>Programming Env</h3>
+  <h4>Programming Env</h4>
   <div id="languages"></div>
 </div>
 <div>
-  <h3>Clean Size</h3>
+  <h4>Clean Size</h4>
   <div id="sizes"></div>
 </div>
 
 <p id="host-version"></p>
+<script src="../assets/js/jquery-3.5.1.slim.min.js"></script>
+<script src="../assets/js/popper.min.js"></script>
+<script src="../assets/js/bootstrap.min.js"></script>
 <script>
   require('../dist/render/renderer.js')
 </script>
