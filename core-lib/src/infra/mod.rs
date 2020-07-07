@@ -1,4 +1,5 @@
 mod disk;
+pub use disk::get_disks;
 
 mod cpu;
 pub use cpu::get_cpu;

@@ -13,6 +13,7 @@ pub enum CoreNotification {
     SendMemory {},
     SendLanguages {},
     SendSizes {},
+    SendDisks {},
     SendCpu {},
     ClientStarted {
         #[serde(default)]

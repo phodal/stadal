@@ -38,6 +38,15 @@ interface CPU {
   max_ghz: string,
 }
 
+interface Disk {
+  device: string,
+  filesystem: string,
+  mount: string,
+  total: string,
+  used: string,
+  free: string,
+}
+
 @injectable()
 export default class Actions {
   display_memory(data: StadalMemory) {
@@ -73,5 +82,22 @@ export default class Actions {
   display_cpu(data: CPU) {
     let innerHTML =`CPU -> cores:${data.cores}, current: ${data.current_ghz} `;
     document.getElementById("cpu").innerText = innerHTML;
+  }
+
+  display_disks(data: Disk[]) {
+    let results = '';
+    for (let datum of data) {
+      let innerHTML =`<div class="memory-content">
+<div><span class="title">Device      </span><span class="value"></span>${datum.device}</div>
+<div><span class="title">Mount     </span><span class="value">${datum.mount}</span></div>
+<div><span class="title">Total     </span><span class="value">${niceBytes(datum.total)}</span></div>
+<div><span class="title">Free      </span><span class="value"></span>${niceBytes(datum.free)}</div>
+<div><span class="title">Used      </span><span class="value"></span>${niceBytes(datum.used)}</div>
+</div>
+    `;
+
+      results += innerHTML;
+    }
+    document.getElementById("disk").innerHTML = results;
   }
 }

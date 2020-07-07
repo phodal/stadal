@@ -31,6 +31,7 @@ function sendFirstMessages() {
     {method: "send_languages"},
     {method: "send_sizes"},
     {method: "send_cpu"},
+    {method: "send_disks"},
   ])
 }
 

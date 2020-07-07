@@ -37,7 +37,7 @@ pub async fn get_disks() -> Option<Vec<StadalDisk>> {
         sdisk.filesystem = part.file_system().as_str().to_string();
         sdisk.mount = part.mount_point().to_string_lossy().to_string();
         if let Ok(usage) = disk::usage(part.mount_point().to_path_buf()).await {
-            sdisk.mount = usage.total().get::<information::byte>().to_string();
+            sdisk.total = usage.total().get::<information::byte>().to_string();
             sdisk.used = usage.used().get::<information::byte>().to_string();
             sdisk.free = usage.free().get::<information::byte>().to_string();
         }

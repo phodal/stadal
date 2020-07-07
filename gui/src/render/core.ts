@@ -147,6 +147,10 @@ export default class Core extends EventEmitter {
           this.action.display_cpu(msg.params)
           return;
         }
+        case CoreResponse.SEND_DISKS: {
+          this.action.display_disks(msg.params)
+          return;
+        }
         default: {
           console.warn('Unhandled message from core: ', msg);
         }
