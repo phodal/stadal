@@ -21,9 +21,3 @@ pub fn get_docker_env() -> CleanSize {
         }
     }
 }
-
-#[cfg(test)]
-mod tests {
-    #[test]
-    fn try_get_docker_size() {}
-}

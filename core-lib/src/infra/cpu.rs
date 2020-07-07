@@ -63,7 +63,6 @@ pub async fn get_cpu() -> Option<Value> {
 #[cfg(test)]
 mod tests {
     use crate::infra::cpu::get_cpu;
-    use futures::{Future, Stream};
     use serde_json::Value;
     use futures::executor::block_on;
 

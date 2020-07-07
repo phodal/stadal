@@ -1,3 +1,5 @@
+mod disk;
+
 mod cpu;
 pub use cpu::get_cpu;
 
