@@ -1,7 +1,7 @@
 use heim::disk;
 use heim::units::{information};
 use std::ffi::OsStr;
-use futures::StreamExt;
+use futures::{StreamExt, TryStreamExt};
 
 #[derive(Clone, Debug, Default, Serialize, Deserialize)]
 pub struct StadalDisk {
@@ -29,15 +29,13 @@ impl StadalDisk {
 pub async fn get_disks() -> Option<Vec<StadalDisk>> {
     let mut output = vec![];
 
-    let partitions = heim::disk::partitions_physical().await?;
-    futures::pin_mut!(partitions);
-
+    let mut partitions = heim::disk::partitions_physical();
     while let Some(part) = partitions.next().await {
-        let part = part?;
+        let part = part.unwrap();
         let mut sdisk = StadalDisk::new();
-        sdisk.device = part.device().unwrap_or_else(|| OsStr::new("N/A")).to_string_lossy();
-        sdisk.filesystem = part.file_system().as_str();
-        sdisk.mount = part.mount_point().to_string_lossy();
+        sdisk.device = part.device().unwrap_or_else(|| OsStr::new("N/A")).to_string_lossy().to_string();
+        sdisk.filesystem = part.file_system().as_str().to_string();
+        sdisk.mount = part.mount_point().to_string_lossy().to_string();
         if let Ok(usage) = disk::usage(part.mount_point().to_path_buf()).await {
             sdisk.mount = usage.total().get::<information::byte>().to_string();
             sdisk.used = usage.used().get::<information::byte>().to_string();
