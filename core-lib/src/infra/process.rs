@@ -4,13 +4,17 @@ use std::usize;
 use futures::{StreamExt, TryStreamExt};
 use heim::process::{self as process, Process, ProcessResult};
 use heim::units::{information, ratio, Ratio};
+use futures::executor::block_on;
+use std::collections::HashMap;
+use std::cmp::Ordering::Equal;
+use std::cmp::Ordering;
 
 #[derive(Clone, Debug, Default, Serialize, Deserialize)]
 pub struct StadalProcess {
-    pid: String,
+    pid: i32,
     name: String,
     status: String,
-    cpu: String,
+    cpu_usage: f32,
     mem: String,
     virtual_mem: String,
     parent: String,
@@ -21,10 +25,10 @@ pub struct StadalProcess {
 impl StadalProcess {
     pub fn new() -> StadalProcess {
         StadalProcess {
-            pid: "".to_string(),
+            pid: 0,
             name: "".to_string(),
             status: "".to_string(),
-            cpu: "".to_string(),
+            cpu_usage: 0.0,
             mem: "".to_string(),
             virtual_mem: "".to_string(),
             parent: "".to_string(),
@@ -53,19 +57,18 @@ pub async fn get_processes() -> Option<Vec<StadalProcess>> {
         .try_buffer_unordered(usize::MAX);
     futures::pin_mut!(results);
 
-
     while let Some(res) = results.next().await {
         if let Ok((process, usage, memory)) = res {
             let mut stadal_process = StadalProcess::new();
 
-            stadal_process.pid = process.pid().to_string();
+            stadal_process.pid = process.pid();
             if let Ok(name) = process.name().await {
                 stadal_process.name = name;
             }
             if let Ok(status) = process.status().await {
                 stadal_process.status = format!("{:?}", status);
             }
-            stadal_process.cpu = usage.get::<ratio::percent>().to_string();
+            stadal_process.cpu_usage = usage.get::<ratio::percent>();
             stadal_process.mem = memory.rss().get::<information::byte>().to_string();
             stadal_process.virtual_mem = memory.vms().get::<information::byte>().to_string();
 
@@ -96,15 +99,59 @@ pub async fn get_processes() -> Option<Vec<StadalProcess>> {
     }
 }
 
+
+#[derive(PartialEq, Eq)]
+pub enum ProcessTableSortOrder {
+    Ascending = 0,
+    Descending = 1,
+}
+
+pub fn field_comparator() -> fn(&StadalProcess, &StadalProcess) -> Ordering {
+    |pa, pb| pa.cpu_usage.partial_cmp(&pb.cpu_usage).unwrap_or(Equal)
+}
+
+pub fn get_sort_processes() -> Vec<StadalProcess> {
+    let mut proc_vec = block_on(get_processes()).unwrap();
+    let mut pm = HashMap::with_capacity(400);
+
+    let mut process_ids = vec![];
+    for x in proc_vec.clone() {
+        pm.insert(x.pid, x.clone());
+        process_ids.push(x.pid);
+    }
+
+    let sorter = field_comparator();
+    let sortorder = &ProcessTableSortOrder::Descending;
+
+    process_ids.sort_by(|a, b| {
+        let pa = pm.get(&a).expect("Error in sorting the process table.");
+        let pb = pm.get(&b).expect("Error in sorting the process table.");
+
+        let ord = sorter(pa, pb);
+        match sortorder {
+            ProcessTableSortOrder::Ascending => ord,
+            ProcessTableSortOrder::Descending => ord.reverse(),
+        }
+    });
+
+    proc_vec
+}
+
 #[cfg(test)]
 mod tests {
     use futures::executor::block_on;
 
-    use crate::infra::process::get_processes;
+    use crate::infra::process::{get_processes, get_sort_processes};
 
     #[test]
-    fn get_disks_sizes() {
+    fn get_processes_test() {
         let processes = block_on(get_processes()).unwrap();
+        println!("{},", json!(&processes));
+    }
+
+    #[test]
+    fn get_sort_processes_test() {
+        let processes = get_sort_processes();
         println!("{},", json!(&processes));
     }
 }
