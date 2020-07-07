@@ -66,9 +66,14 @@ export default class Actions {
     document.getElementById("mem-total").innerText = niceBytes(data.total);
     document.getElementById("mem-available").innerText = niceBytes(data.available);
     document.getElementById("mem-free").innerText = niceBytes(data.free);
+    document.getElementById("swap-total").innerText = niceBytes(data.swap_total);
+    document.getElementById("swap-free").innerText = niceBytes(data.swap_free);
+    document.getElementById("swap-used").innerText = niceBytes(data.swap_used);
+
+    let swap_rate: number = (parseInt(data.swap_used, 10) / 1024) / (parseInt(data.swap_total, 10) / 1024) * 100;
     document.getElementById("swap-container").innerHTML = `
 <div class="progress">
-  <div class="progress-bar" role="progressbar" aria-valuenow="${data.swap_used}" aria-valuemin="0" aria-valuemax="${data.swap_total}"></div>
+  <div class="progress-bar" role="progressbar" style="width: ${swap_rate}%" aria-valuenow="${data.swap_used}" aria-valuemin="0" aria-valuemax="${data.swap_total}"></div>
 </div>
     `;
   }
