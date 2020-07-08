@@ -2,6 +2,8 @@
 
 > A RPC-based client-server system status tools, with Rust + Electron architecture.
 
+![Stadal Screenshots](docs/stadal.png)
+
 ## Architecture (design)
 
  - RPC Server, (Using Rust) for read system status.
