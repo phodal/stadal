@@ -36,6 +36,7 @@ Dev Setup:
 System
 
  - [bandwhich](https://github.com/imsnif/bandwhich) is a CLI utility for displaying current network utilization by process, connection and remote IP/hostname.
+ - [https://github.com/tbillington/kondo](https://github.com/tbillington/kondo) -  Save disk space by cleaning non-essential files from software projects. 
 
 ## Documents
 
